@@ -11,8 +11,8 @@
     }
     //move chart height/width to be global
     //chart frame dimensions
-    var chartWidth = window.innerWidth * 0.425,
-        chartHeight = 460;
+    var chartWidth = window.innerWidth * 0.5 - 25,
+        chartHeight = window.innerHeight - 170;
 
     //begin script when window loads
     window.onload = setMap();
@@ -20,8 +20,8 @@
     //Example 1.3 line 4...set up choropleth map
     function setMap() {
         //map frame dimensions
-        var width = window.innerWidth * 0.5,
-            height = 460;
+        var width = window.innerWidth * 0.5 - 25,
+            height = window.innerHeight - 170;
 
         //create new svg container for the map
         var map = d3
@@ -34,8 +34,8 @@
         //create Albers equal area conic projection centered on the Midwest
         var projection = d3
             .geoAlbers()
-            .center([-88.3, 42.6])
-            .rotate([49, 36, 17])
+            .center([-89.3, 43.6])
+            .rotate([49, 37, 15.5])
             .parallels([37, 45])
             .scale(1600)
             .translate([width / 2, height / 2]);

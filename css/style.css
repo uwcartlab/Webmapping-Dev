@@ -28,7 +28,7 @@
     background:#D5E3FF;
 }
 .us {
-    fill: #fff;
+    fill: #fff; 
     stroke: #CCC;
     stroke-width: 1px;
 }
@@ -37,18 +37,17 @@
     stroke-width: 0.5px;
     stroke-linecap: round;
 }
-
 /*chapter 10 Styling */
 /*example 2.3*/
 .map {
     border: medium solid #999;
-    margin: 10px 0 0 20px;
+    margin: 5px 0 0 0;
 }
 .chart {
     background-color: rgba(128,128,128,.2);
     border: medium solid #999;
     float: right;
-    margin: 10px 20px 0 0;
+    margin: 5px 0 0 0;
 }
 /*Chapter 11 styling*/
 /*example 1.2*/
@@ -87,7 +86,6 @@ option {
 /*Example 2.8*/
 .infolabel {
     position: absolute;
-    height: 50px;
     min-width: 100px;
     color: #fff;
     background-color: #000;
@@ -95,11 +93,23 @@ option {
     padding: 5px 10px;
 }
 .infolabel h1 {
-    margin: 0 20px 0 0;
+    margin: 5px;
     padding: 0;
     display: inline-block;
     line-height: 1em;
 }
+/*Example 3.3*/
+.dropdown-label{
+    display:inline;
+}
+/*Example 3.1*/
+/*chart styling on small screens*/
+@media only screen and (max-width: 700px){
+    .chart {
+        float:none;
+    }
+}
+
 /*
 .numbers {
     fill: white;

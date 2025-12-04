@@ -11,8 +11,8 @@
     }
     //move chart height/width to be global
     //chart frame dimensions
-    var chartWidth = window.innerWidth * 0.425,
-    chartHeight = 460;
+    var chartWidth = window.innerWidth * 0.5 - 25,
+        chartHeight = window.innerHeight - 170;
 
     //begin script when window loads
     window.onload = setMap();
@@ -20,8 +20,8 @@
     //Example 1.3 line 4...set up choropleth map
     function setMap() {
         //map frame dimensions
-        var width = window.innerWidth * 0.5,
-            height = 460;
+        var width = window.innerWidth * 0.5 - 25,
+            height = window.innerHeight - 170;
 
         //create new svg container for the map
         var map = d3

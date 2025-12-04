@@ -11,7 +11,7 @@
 	//Example 1.3 line 4...set up choropleth map
 	function setMap() {
 		//map frame dimensions
-		var width = window.innerWidth * 0.5,
+		var width = window.innerWidth * 0.5 - 25,
 			height = 460;
 
 		//create new svg container for the map
@@ -153,7 +153,7 @@
 	//function to create coordinated bubble chart
 	function setChart(csvData, colorScale) {
 		//chart frame dimensions
-		var chartWidth = window.innerWidth * 0.425,
+		var chartWidth = window.innerWidth * 0.5 - 25,
 			chartHeight = 460;
 
 		//create a second svg element to hold the bar chart
