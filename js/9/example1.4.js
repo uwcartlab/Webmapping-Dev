@@ -17,7 +17,7 @@ function setMap() {
             midwestData = data[1],
             statesData = data[2];
         console.log(csvData);
-        console.log(midwest);
-        console.log(states);
+        console.log(midwestData);
+        console.log(statesData);
     }
 }

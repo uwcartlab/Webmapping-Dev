@@ -1,0 +1,18 @@
+/*Chapter 9 Styling*/
+/*example 2.4*/
+.us {
+    fill: #fff; 
+    stroke: #CCC;
+    stroke-width: 1px;
+}
+.midwest {
+    stroke: #fff;
+    stroke-width: 0.5px;
+    stroke-linecap: round;
+}
+/*example 2.5*/
+.map {
+    border: medium solid #999;
+    margin: 10px 0 0 20px;
+    background:#D5E3FF;
+}

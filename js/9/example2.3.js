@@ -17,9 +17,9 @@ function setMap() {
     //create Albers equal area conic projection centered on the Midwest
     var projection = d3
         .geoAlbers()
-        .center([-88.3, 42.6])
-        .rotate([49, 36, 17])
-        .parallels([37, 45])
+        .center([-7.27, 46.33])
+        .rotate([86.45, 2.73, 0])
+        .parallels([8.41, 45.50])
         .scale(1600)
         .translate([width / 2, height / 2]);
 
