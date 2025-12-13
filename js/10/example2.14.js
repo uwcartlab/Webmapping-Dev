@@ -1,8 +1,14 @@
-//wrap everything is immediately invoked anonymous function so nothing is in clobal scope
+//ADD Y SCALE AND CIRCLE COLORS
+//wrap everything is immediately invoked anonymous function so nothing is in global scope
 (function () {
 	//pseudo-global variables
-	var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
-	var expressed = attrArray[0]; //initial attribute
+    var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
+    //create an object for different expressed variables
+    var expressed  = {
+        x:attrArray[2],
+        y:attrArray[0],
+        color:attrArray[1]
+    }
 
 	//begin script when window loads
 	window.onload = setMap();
@@ -103,7 +109,7 @@
 		//build array of all values of the expressed attribute
 		var domainArray = [];
 		for (var i = 0; i < data.length; i++) {
-			var val = parseFloat(data[i][expressed]);
+			var val = parseFloat(data[i][expressed.color]);
 			domainArray.push(val);
 		};
 
@@ -126,14 +132,57 @@
 			.attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
+				var value = d.properties[expressed.color];            
 				if(value) {            	
-					return colorScale(d.properties[expressed]);            
+					return colorScale(d.properties[expressed.color]);            
 				} else {            	
 					return "#ccc";            
 				}    
 			});
 	}
+
+    //add function to calculate the minimum and maximum values for expressed variables
+	function getDataValues(csvData, expressedValue) {
+        var max = d3.max(csvData, function(d) { 
+            return parseFloat(d[expressedValue]); 
+        });
+        var min = d3.min(csvData, function(d) { 
+            return parseFloat(d[expressedValue]); 
+        });
+        var range = max - min,
+            adjustment = (range / csvData.length)
+
+        return [min - adjustment, max + adjustment];
+    }
+
+    //function to create y scale
+	function createYScale(csvData, chartHeight){
+		var dataMinMax = getDataValues(csvData, expressed.y)
+		return yScale = d3.scaleLinear().range([0, chartHeight]).domain([dataMinMax[1], dataMinMax[0]]);
+	}
+	//function to create x scale
+	function createXScale(csvData, chartWidth){
+		var dataMinMax =  getDataValues(csvData, expressed.x)
+		return xScale = d3.scaleLinear().range([0, chartWidth]).domain([dataMinMax[0], dataMinMax[1]]);
+	}
+
+    //create axes
+    function createChartAxes(chart, chartHeight, yScale, xScale){
+        //add axis
+        //create vertical axis generator
+        var yAxisScale = d3.axisRight().scale(yScale);
+        var xAxisScale = d3.axisTop().scale(xScale);
+
+        //place axis
+        var yaxis = chart.append("g")
+            .attr("class", "yaxis")
+            .call(yAxisScale);
+            
+        var xaxis = chart.append("g")
+            .attr("class", "xaxis")//format x axis
+			.attr("transform", "translate(0," + chartHeight + ")")
+            .call(xAxisScale);
+    }
 
 	//function to create coordinated bubble chart
 	function setChart(csvData, colorScale) {
@@ -147,6 +196,14 @@
 			.attr("width", chartWidth)
 			.attr("height", chartHeight)
 			.attr("class", "chart");
+	
+		//create a scale to place circles proportionally
+		var yScale = createYScale(csvData,chartHeight)
+        //create an x scale to place circles proportionally
+		var xScale = createXScale(csvData, chartWidth);
+
+        //create axes
+        createChartAxes(chart,chartHeight,yScale,xScale)
 
 		//set circles for each state
 		var circles = chart.selectAll(".circles") //create an empty selection
@@ -157,11 +214,24 @@
             .attr("class", function (d) {
                 return "bubble " + d.state_abbr;
             })
-            .attr("r", "10")
-            .attr("cx", function (d, i) {
-				return i * (chartWidth / csvData.length) + 15;
+            .attr("r", function (d) {
+				var minRadius = 2.5
+				//calculate the radius based on expressed value as circle area
+				var radius = Math.pow(d[expressed.color], 0.5715) * minRadius;
+				return radius;
 			})
-            .attr("cy",25)
-	};
+            //place circles horizontally on the chart
+			.attr("cx", function (d, i) {
+				return xScale(parseFloat(d[expressed.x]));
+			})
+			//place circles vertically on the chart
+            .attr("cy", function(d){
+				return yScale(parseFloat(d[expressed.y]));
+			})
+            .attr("fill", function(d){
+				return colorScale(parseFloat(d[expressed.color]));
+			});
+
+};
 
 })();

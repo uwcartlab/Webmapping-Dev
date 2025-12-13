@@ -1,9 +1,14 @@
-//USE FUNCTIONS TO CREATE SCALES AND CALCULATE DATA MIN/MAX
-//wrap everything is immediately invoked anonymous function so nothing is in clobal scope
+//ADD Y SCALE AND CIRCLE COLORS
+//wrap everything is immediately invoked anonymous function so nothing is in global scope
 (function () {
 	//pseudo-global variables
-	var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
-	var expressed = attrArray[0]; //initial attribute
+    var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
+    //create an object for different expressed variables
+    var expressed  = {
+        x:attrArray[2],
+        y:attrArray[0],
+        color:attrArray[1]
+    }
 
 	//begin script when window loads
 	window.onload = setMap();
@@ -104,7 +109,7 @@
 		//build array of all values of the expressed attribute
 		var domainArray = [];
 		for (var i = 0; i < data.length; i++) {
-			var val = parseFloat(data[i][expressed]);
+			var val = parseFloat(data[i][expressed.color]);
 			domainArray.push(val);
 		};
 
@@ -126,30 +131,16 @@
 			})
 			.attr("d", path)
 			.style("fill", function (d) {
-				return colorScale(d.properties[expressed]);
+				//check to make sure a data value exists, if not set color to gray
+				var value = d.properties[expressed.color];            
+				if(value) {            	
+					return colorScale(d.properties[expressed.color]);            
+				} else {            	
+					return "#ccc";            
+				}    
 			});
 	}
-	//function to calculate minimum and maximum data values
-	function getDataValues(csvData) {
-        var max = d3.max(csvData, function(d) { 
-			return parseFloat(d[expressedValue]); 
-		});
-		var min = d3.min(csvData, function(d) { 
-			return parseFloat(d[expressedValue]); 
-		});
-        //account for 0 in the dataset
-        return [min, max];
-    }
-	//function to create y scale
-	function createYScale(csvData, chartHeight){
-		var dataMinMax = getDataValues(csvData)
-		return yScale = d3.scaleLinear().range([0, chartHeight]).domain([dataMinMax[1], dataMinMax[0]]);
-	}
-	//function to create x scale
-	function createXScale(csvData, chartWidth){
-		var dataMinMax =  getDataValues(csvData)
-		return xScale = d3.scaleLinear().range([0, chartWidth]).domain([dataMinMax[0], dataMinMax[1]]);
-	}
+
 	//function to create coordinated bubble chart
 	function setChart(csvData, colorScale) {
 		//chart frame dimensions
@@ -162,40 +153,38 @@
 			.attr("width", chartWidth)
 			.attr("height", chartHeight)
 			.attr("class", "chart");
-
-		//create a y scale to place circles proportionally
-		var yScale = createYScale(csvData, chartHeight);
-		//create an x scale to place circles proportionally
-		var xScale = createXScale(csvData, chartWidth);
+	
+		//create a scale to place circles proportionally
+		var yScale = d3.scaleLinear()
+			.range([chartHeight, 0])
+			.domain([0, 50]);
+        //create an x scale to place circles proportionally
+		var xScale = d3.scaleLinear()
+            .range([0, chartWidth])
+            .domain([0, 50]);
 
 		//set circles for each state
 		var circles = chart.selectAll(".circles") //create an empty selection
-			.data(csvData) //here we feed in our array of data
-			.enter() //one of the great mysteries of the universe
-			.append("circle") //inspect the HTML--holy crap, there's some circles there
-			.attr("class", "circles")
-			.attr("class", function (d) {
-				return "bubble " + d.state_abbr;
-			})
-			//calculate the size of circles
-			.attr("r", function (d) {
-				var min = 1, minRadius = 2.5
-				//calculate the radius based on population value as circle area
-				var radius = Math.pow(d[expressed] / min, 0.5715) * minRadius;;
-				return radius;
-			})
+            .data(csvData) //here we feed in our array of data
+            .enter() //one of the great mysteries of the universe
+            .append("circle") //inspect the HTML--holy crap, there's some circles there
+            .attr("class", "circles")
+            .attr("class", function (d) {
+                return "bubble " + d.state_abbr;
+            })
+            .attr("r", "10")
+            //place circles horizontally on the chart
 			.attr("cx", function (d, i) {
-				return xScale(parseFloat(d[expressed]));
+				return xScale(parseFloat(d[expressed.x]));
 			})
 			//place circles vertically on the chart
-			.attr("cy", function (d) {
-				return yScale(parseFloat(d[expressed]));
+            .attr("cy", function(d){
+				return yScale(parseFloat(d[expressed.y]));
 			})
-			//color circles to match the map
-			.attr("fill", function (d) {
-				return colorScale(parseFloat(d[expressed]));
+            .attr("fill", function(d){
+				return colorScale(parseFloat(d[expressed.color]));
 			});
 
-	};
+};
 
 })();

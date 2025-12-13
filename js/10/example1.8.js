@@ -124,7 +124,13 @@
 			})
 			.attr("d", path)
 			.style("fill", function (d) {
-				return colorScale(d.properties[expressed]);
+				//check to make sure a data value exists, if not set color to gray
+				var value = d.properties[expressed];            
+				if(value) {            	
+					return colorScale(d.properties[expressed]);            
+				} else {            	
+					return "#ccc";            
+				}    
 			});
 	}
 

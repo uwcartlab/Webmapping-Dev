@@ -1,5 +1,5 @@
 //ADD Y SCALE AND CIRCLE COLORS
-//wrap everything is immediately invoked anonymous function so nothing is in clobal scope
+//wrap everything is immediately invoked anonymous function so nothing is in global scope
 (function () {
 	//pseudo-global variables
 	var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
@@ -126,7 +126,13 @@
 			})
 			.attr("d", path)
 			.style("fill", function (d) {
-				return colorScale(d.properties[expressed]);
+				//check to make sure a data value exists, if not set color to gray
+				var value = d.properties[expressed];            
+				if(value) {            	
+					return colorScale(d.properties[expressed]);            
+				} else {            	
+					return "#ccc";            
+				}    
 			});
 	}
 
@@ -145,8 +151,8 @@
 	
 		//create a scale to place circles proportionally
 		var yScale = d3.scaleLinear()
-			.range([0, chartHeight])
-			.domain([100, 0]);
+			.range([chartHeight, 0])
+			.domain([0, 50]);
 
 		//set circles for each state
 		var circles = chart.selectAll(".circles") //create an empty selection
@@ -164,32 +170,8 @@
 			//place circles vertically on the chart
             .attr("cy", function(d){
 				return yScale(parseFloat(d[expressed]));
-			})
-			//color circles to match the map
-			.attr("fill", function(d){
-				return colorScale(parseFloat(d[expressed]));
 			});
 
-    //Example 2.4 line 8...set bars for each province
-    /*var bars = chart.selectAll(".bars")
-        .data(csvData)
-        .enter()
-        .append("rect")
-        .attr("class", function(d){
-            return "bars " + d.adm1_code;
-        })
-        .attr("width", chartWidth / csvData.length - 1)
-        .attr("x", function(d, i){
-            return i * (chartWidth / csvData.length);
-        })
-        .attr("height", function(d){
-            return yScale(parseFloat(d[expressed]));
-        })
-        .attr("y", function(d){
-            return chartHeight - yScale(parseFloat(d[expressed]));
-        }).style("fill", function(d){
-            return colorScale(d[expressed]);
-        });*/
 };
 
 })();

@@ -379,9 +379,9 @@ In a block with a data join, the anonymous functions that return a second parame
 
 ### III. Complex Data
 
-So far, we have relied upon a very simple array to build our example graphic. What if we want something a little more complex and meaningful—say, a graph of city populations. We can start with a more complicated data array. In this case, state-wide energy production statistics (in TeraWatt hours). We will be using and expanding upon these data throughout Section 3 (Example 2.7).
+So far, we have relied upon a very simple array to build our example graphic. What if we want something a little more complex and meaningful—say, a graph of state energy. We can start with a more complicated data array. In this case, state-wide energy production statistics (in TeraWatt hours). We will be using and expanding upon these data throughout Section 3 (Example 2.7).
 
-###### Example 2.7: The city populations data array from Chapter 2
+###### Example 2.7: The state energy data array from Chapter 2
 
     var stateEnergy = [
         {
@@ -403,7 +403,7 @@ So far, we have relied upon a very simple array to build our example graphic. Wh
     ];
     
 
-We can make a bubble chart out of this data by combining it with our `circles` block. We need to make a few modifications to the block: derive the circle radii from the populations as areas and derive the center y coordinates from the populations times a scale factor (Example 2.8). Let's pass on Flannery for now for demonstrative purposes.
+We can make a bubble chart out of this data by combining it with our `circles` block. We need to make a few modifications to the block: derive the circle radii from the energy values as areas and derive the center y coordinates from the energy times a scale factor (Example 2.8). Let's pass on Flannery for now for demonstrative purposes.
 
 ###### Example 2.8: Using the `stateEnergy` array to create circles in _main.js_
 
@@ -436,7 +436,7 @@ We can make a bubble chart out of this data by combining it with our `circles` b
                 return d.state;
             })
             .attr("r", function (d) {
-                //calculate the radius based on population value as circle area
+                //calculate the radius based on energy value as circle area
                 var area = d.energy * 10;
                 return Math.sqrt(area / Math.PI);
             })
@@ -503,9 +503,9 @@ When passed a value, the scale generator will determine where that value lies in
             })
     
 
-We can do the same sort of thing with the center y coordinate of the circles. The difference here is that we have written our equation for `cy` to return a value based on each city's population. Therefore, to create a scale for `cy`, we need to determine the minimum and maximum populations of our dataset for our input domain. While you could write a complicated custom function to pull out these values, a much simpler way to do it is to make use of D3's [`.min()`](https://github.com/d3/d3-array/blob/master/README.md#min) and [`.max()`](https://github.com/d3/d3-array/blob/master/README.md#max) methods. These methods take up to two parameters: the array first, and then an accessor function that tells each method where to look for the values to compare. Once we have found these values and stored them in variables, we can apply them to the domain of our `y` scale (Example 3.3).
+We can do the same sort of thing with the center y coordinate of the circles. The difference here is that we have written our equation for `cy` to return a value based on each states's energy production. Therefore, to create a scale for `cy`, we need to determine the minimum and maximum energy values of our dataset for our input domain. While you could write a complicated custom function to pull out these values, a much simpler way to do it is to make use of D3's [`.min()`](https://github.com/d3/d3-array/blob/master/README.md#min) and [`.max()`](https://github.com/d3/d3-array/blob/master/README.md#max) methods. These methods take up to two parameters: the array first, and then an accessor function that tells each method where to look for the values to compare. Once we have found these values and stored them in variables, we can apply them to the domain of our `y` scale (Example 3.3).
 
-###### Example 3.3: Determining maximum and minimum population values in _main.js_
+###### Example 3.3: Determining maximum and minimum energy values in _main.js_
 
         //below Example 3.1 line 51        
         //find the minimum value of the array
@@ -527,14 +527,14 @@ We can do the same sort of thing with the center y coordinate of the circles. Th
             ]);
     
 
-Note that the range is flipped, with a "minimum" value of `440` and a "maximum" of `95`. Like the subtraction in our prior equation, this ensures that higher values are associated with "up" rather than "down", since the \[0,0\] coordinate of the SVG is its upper-left corner. We've chosen these values because they spread our circles most evenly over the inner rectangle of the chart without overflowing it. We now can apply our scale to our population values in the `cy` anonymous function (Example 3.4).
+Note that the range is flipped, with a "minimum" value of `440` and a "maximum" of `95`. Like the subtraction in our prior equation, this ensures that higher values are associated with "up" rather than "down", since the \[0,0\] coordinate of the SVG is its upper-left corner. We've chosen these values because they spread our circles most evenly over the inner rectangle of the chart without overflowing it. We now can apply our scale to our energy values in the `cy` anonymous function (Example 3.4).
 
 ###### Example 3.4: Applying the y scale to return the circles' center y coordinates in _main.js_
 
             //Example 3.1 line 88
             .attr("cy", function(d){
                 //size circles based on energy values
-                return y(d.population);
+                return y(d.energy);
             });
     
 
@@ -546,7 +546,7 @@ Here are our much more evenly-spaced circles (Figure 3.3).
 
 ### II. Color Scales
 
-One nice feature of D3 scales is that they support interpolation for just about any kind of value that can be interpolated—including color. For your D3 map, you will be creating a choropleth map, which will require the use of a color scale. Try an easy one for the circles on our bubble chart, with color value corresponding to population size. We will again make use of `d3.scaleLinear()` with the same domain as the `y` scale, but this time the range will be colors (Example 3.5).
+One nice feature of D3 scales is that they support interpolation for just about any kind of value that can be interpolated—including color. For your D3 map, you will be creating a choropleth map, which will require the use of a color scale. Try an easy one for the circles on our bubble chart, with color value corresponding to energy size. We will again make use of `d3.scaleLinear()` with the same domain as the `y` scale, but this time the range will be colors (Example 3.5).
 
 ###### Example 3.5: Implementing a color scale in _main.js_
 
@@ -590,7 +590,7 @@ Here is the output of our simple unclassed color scale (Figure 3.4).
 
 With four colored, proportionally-sized and -positioned circles, our bubble chart is looking pretty good—except that nobody looking at it would know how to read it! In order to make a data graphic useful, you need to give users _**affordances**_ to contextualize the information they are seeing. One important affordance is an _**axis**_, the familiar reference line with tick marks and numbers that makes the graphic's scale in any one dimension visible to the user. D3 includes a module for automatically drawing axes, although it can be a bit of a trick to apply properly.
 
-For our bubble chart, the horizontal scale is basically meaningless; it uses the data array index values as inputs and only functions to separate our circles evenly. Our vertical scale, on the other hand, makes meaningful use of our population data. Thus, it makes sense to provide the user with a vertical axis as a visual affordance for the information encoded by each circle's `"cy"` attribute. We create a vertical access on the left side of the chart based on our vertical scale using `d3.axisLeft(y)` (Example 3.6).
+For our bubble chart, the horizontal scale is basically meaningless; it uses the data array index values as inputs and only functions to separate our circles evenly. Our vertical scale, on the other hand, makes meaningful use of our energy data. Thus, it makes sense to provide the user with a vertical axis as a visual affordance for the information encoded by each circle's `"cy"` attribute. We create a vertical access on the left side of the chart based on our vertical scale using `d3.axisLeft(y)` (Example 3.6).
 
 ###### Example 3.6: Creating the y axis generator in _main.js_
 
@@ -757,14 +757,14 @@ This works quite well, except that the labels are a bit long. Superior's even ov
 
         //Example 3.14 line 1...create circle labels
         var labels = container.selectAll(".labels")
-            .data(cityPop)
+            .data(stateEnergy)
             .enter()
             .append("text")
             .attr("class", "labels")
             .attr("text-anchor", "left")
             .attr("y", function(d){
                 //vertical position centered on each circle
-                return y(d.population)
+                return y(d.energy)
             });
     
         //first line of label
@@ -795,7 +795,7 @@ Figure 3.11 shows the result.
 
 ###### Figure 3.11: Label mush
 
-We now have separated the city name and population into two separate lines, but they are on top of each other! The solution is to offset the second line vertically from the first by adding a `"dy"` attribute to it (Example 3.16).
+We now have separated the state name and energy into two separate lines, but they are on top of each other! The solution is to offset the second line vertically from the first by adding a `"dy"` attribute to it (Example 3.16).
 
 ###### Example 3.16: Offsetting the second line in _main.js_
 

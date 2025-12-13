@@ -141,9 +141,15 @@
                 return "midwest " + d.properties.state_abbr;
             })
             .attr("d", path)
-            .style("fill", function (d) {
-                return colorScale(d.properties[expressed.color]);
-            })
+			.style("fill", function (d) {
+				//check to make sure a data value exists, if not set color to gray
+				var value = d.properties[expressed];            
+				if(value) {            	
+					return colorScale(d.properties[expressed]);            
+				} else {            	
+					return "#ccc";            
+				}    
+			})
             .on("mouseover", function (event, d) {
                 highlight(d.properties);
             });
@@ -163,13 +169,13 @@
         return [min - adjustment, max + adjustment];
     }
     //function to create y scale
-    function createYScale(csvData, chartHeight, expressedValue) {
-        var dataMinMax = getDataValues(csvData, expressedValue)
+    function createYScale(csvData, chartHeight) {
+        var dataMinMax = getDataValues(csvData, expressed.y)
         return yScale = d3.scaleLinear().range([0, chartHeight]).domain([dataMinMax[1], dataMinMax[0]]);
     }
     //function to create x scale
-    function createXScale(csvData, chartWidth, expressedValue) {
-        var dataMinMax = getDataValues(csvData, expressedValue)
+    function createXScale(csvData, chartWidth) {
+        var dataMinMax = getDataValues(csvData, expressed.x)
         return xScale = d3.scaleLinear().range([0, chartWidth]).domain([dataMinMax[0], dataMinMax[1]]);
     }
     //create axes
@@ -199,9 +205,9 @@
             .attr("class", "chart");
 
         //create a y scale to place circles proportionally
-        var yScale = createYScale(csvData, chartHeight, expressed.y);
+        var yScale = createYScale(csvData, chartHeight);
         //create an x scale to place circles proportionally
-        var xScale = createXScale(csvData, chartWidth, expressed.x);
+        var xScale = createXScale(csvData, chartWidth);
         //create axes
         createChartAxes(chart, chartHeight, yScale, xScale)
 

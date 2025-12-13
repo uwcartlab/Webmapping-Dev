@@ -1,4 +1,5 @@
-//wrap everything is immediately invoked anonymous function so nothing is in clobal scope
+//ADD Y SCALE AND CIRCLE COLORS
+//wrap everything is immediately invoked anonymous function so nothing is in global scope
 (function () {
 	//pseudo-global variables
 	var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
@@ -147,6 +148,15 @@
 			.attr("width", chartWidth)
 			.attr("height", chartHeight)
 			.attr("class", "chart");
+	
+		//create a scale to place circles proportionally
+		var yScale = d3.scaleLinear()
+			.range([chartHeight, 0])
+			.domain([0, 50]);
+        //create an x scale to place circles proportionally
+		var xScale = d3.scaleLinear()
+            .range([0, chartWidth])
+            .domain([0, 50]);
 
 		//set circles for each state
 		var circles = chart.selectAll(".circles") //create an empty selection
@@ -158,10 +168,15 @@
                 return "bubble " + d.state_abbr;
             })
             .attr("r", "10")
-            .attr("cx", function (d, i) {
-				return i * (chartWidth / csvData.length) + 15;
+            //place circles horizontally on the chart
+			.attr("cx", function (d, i) {
+				return xScale(parseFloat(d[expressed]));
 			})
-            .attr("cy",25)
-	};
+			//place circles vertically on the chart
+            .attr("cy", function(d){
+				return yScale(parseFloat(d[expressed]));
+			});
+
+};
 
 })();
