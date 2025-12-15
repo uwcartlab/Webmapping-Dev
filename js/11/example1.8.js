@@ -1,18 +1,13 @@
-//create two new dropdowns and add x/y updates to the chart, including creating new scales and axes move chart dimensions to pseudo-global
 //wrap everything is immediately invoked anonymous function so nothing is in clobal scope
 (function () {
     //pseudo-global variables
     var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
     //create an object for different expressed variables
     var expressed = {
-        x: attrArray[4],
+        x: attrArray[2],
         y: attrArray[0],
         color: attrArray[1]
     }
-    //move chart height/width to be global
-    //chart frame dimensions
-    var chartWidth = window.innerWidth * 0.5 - 25,
-        chartHeight = window.innerHeight - 170;
 
     //begin script when window loads
     window.onload = setMap();
@@ -21,7 +16,7 @@
     function setMap() {
         //map frame dimensions
         var width = window.innerWidth * 0.5 - 25,
-            height = window.innerHeight - 170;
+            height = 460;
 
         //create new svg container for the map
         var map = d3
@@ -71,9 +66,8 @@
 
             setEnumerationUnits(midwestStates, map, path, colorScale);
 
-            createDropdown(csvData, "Select Color/Size", "color");
-            createDropdown(csvData, "Select X", "x");
-            createDropdown(csvData, "Select Y", "y");
+            createTitle();
+            createDropdown(csvData);
         };
     };
 
@@ -141,9 +135,9 @@
             .attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
+				var value = d.properties[expressed.color];            
 				if(value) {            	
-					return colorScale(d.properties[expressed]);            
+					return colorScale(d.properties[expressed.color]);            
 				} else {            	
 					return "#ccc";            
 				}    
@@ -192,6 +186,10 @@
     }
     //function to create coordinated bubble chart
     function setChart(csvData, colorScale) {
+        //chart frame dimensions
+        var chartWidth = window.innerWidth * 0.5 - 25,
+            chartHeight = 460;
+
         //create a second svg element to hold the bar chart
         var chart = d3.select("body")
             .append("svg")
@@ -236,21 +234,21 @@
 
     };
     //function to create a dropdown menu for attribute selection
-    function createDropdown(csvData, selectionText, expressedAttribute) {
+    function createDropdown(csvData) {
         //add select element
         //select .navbar instead of body
         var dropdown = d3.select(".navbar")
             .append("select")
             .attr("class", "dropdown")
             .on("change", function () {
-                changeAttribute(this.value, expressedAttribute, csvData)
-            });
+                changeAttribute(this.value, csvData)
+        });
 
         //add initial option
         var titleOption = dropdown.append("option")
             .attr("class", "titleOption")
             .attr("disabled", "true")
-            .text(selectionText);
+            .text("Select Attribute");
 
         //add attribute name options
         var attrOptions = dropdown.selectAll("attrOptions")
@@ -260,10 +258,18 @@
             .attr("value", function (d) { return d })
             .text(function (d) { return d });
     };
+    //create page title
+    function createTitle() {
+        var pageTitle = d3
+            .select(".navbar")
+            .append("h1")
+            .attr("class", "pageTitle")
+            .text("Midwest Energy Dashboard")
+    }
     //dropdown change event handler
-    function changeAttribute(attribute, expressedAttribute, csvData) {
+    function changeAttribute(attribute, csvData) {
         //change the expressed color attribute
-        expressed[expressedAttribute] = attribute;
+        expressed.color = attribute;
 
         //recreate the color scale
         var colorScale = makeColorScale(csvData);
@@ -277,36 +283,6 @@
                 return "#ccc";
             }
         });
-
-        //recreate x and y scales based on the newly expressed value
-        //update y scale
-        var yScale = createYScale(csvData, chartHeight, expressed.y);
-        //update x scale
-        var xScale = createXScale(csvData, chartWidth, expressed.x);
-        //update axes
-        var yaxis = d3.select(".yaxis").call(d3.axisRight().scale(yScale))
-        var xaxis = d3.select(".xaxis").call(d3.axisTop().scale(xScale))
-
-        //recolor bubbles
-        var circles = d3.selectAll(".bubble")
-            //recolor circles to match the map
-            .attr("fill", function (d) {
-                return colorScale(parseFloat(d[expressed.color]));
-            })
-            //resize circles
-            .attr("r", function (d) {
-                var min = 1, minRadius = 2.5
-                //calculate the radius based on population value as circle area
-                var radius = Math.pow(d[expressed.color] / min, 0.5715) * minRadius;;
-                return radius;
-            })
-            //calculate x and y scales
-            .attr("cx", function (d, i) {
-                return xScale(parseFloat(d[expressed.x]));
-            })
-            .attr("cy", function (d) {
-                return yScale(parseFloat(d[expressed.y]));
-            })
     }
 
 })();

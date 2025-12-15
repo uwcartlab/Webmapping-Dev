@@ -4,7 +4,7 @@
     var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
     //create an object for different expressed variables
     var expressed = {
-        x: attrArray[4],
+        x: attrArray[2],
         y: attrArray[0],
         color: attrArray[1]
     }
@@ -134,9 +134,9 @@
             .attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
+				var value = d.properties[expressed.color];            
 				if(value) {            	
-					return colorScale(d.properties[expressed]);            
+					return colorScale(d.properties[expressed.color]);            
 				} else {            	
 					return "#ccc";            
 				}    

@@ -4,7 +4,7 @@
     var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
     //create an object for different expressed variables
     var expressed = {
-        x: attrArray[4],
+        x: attrArray[2],
         y: attrArray[0],
         color: attrArray[1]
     }
@@ -66,7 +66,7 @@
 
             setEnumerationUnits(midwestStates, map, path, colorScale);
 
-            createDropdown(csvData);
+            createDropdown();
         };
     };
 
@@ -134,9 +134,9 @@
             .attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
+				var value = d.properties[expressed.color];            
 				if(value) {            	
-					return colorScale(d.properties[expressed]);            
+					return colorScale(d.properties[expressed.color]);            
 				} else {            	
 					return "#ccc";            
 				}    
@@ -233,14 +233,12 @@
 
     };
     //function to create a dropdown menu for attribute selection
-    function createDropdown(csvData) {
+    function createDropdown() {
         //add select element
-        var dropdown = d3.select("body")
+        //select .navbar instead of body
+        var dropdown = d3.select(".navbar")
             .append("select")
-            .attr("class", "dropdown")
-            .on("change", function () {
-                changeAttribute(this.value, csvData)
-            });
+            .attr("class", "dropdown");
 
         //add initial option
         var titleOption = dropdown.append("option")
@@ -256,23 +254,6 @@
             .attr("value", function (d) { return d })
             .text(function (d) { return d });
     };
-    //dropdown change event handler
-    function changeAttribute(attribute, csvData) {
-        //change the expressed color attribute
-        expressed.color = attribute;
 
-        //recreate the color scale
-        var colorScale = makeColorScale(csvData);
-
-        //recolor enumeration units
-        var midwest = d3.selectAll(".midwest").style("fill", function (d) {
-            var value = d.properties[expressed.color];
-            if (value) {
-                return colorScale(d.properties[expressed.color]);
-            } else {
-                return "#ccc";
-            }
-        });
-    }
 
 })();

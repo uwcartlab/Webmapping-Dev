@@ -1,18 +1,16 @@
-//create title element and layout dropdowns in the css
 //wrap everything is immediately invoked anonymous function so nothing is in clobal scope
 (function () {
     //pseudo-global variables
     var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
     //create an object for different expressed variables
     var expressed = {
-        x: attrArray[4],
+        x: attrArray[2],
         y: attrArray[0],
         color: attrArray[1]
     }
-    //move chart height/width to be global
     //chart frame dimensions
     var chartWidth = window.innerWidth * 0.5 - 25,
-        chartHeight = window.innerHeight - 170;
+    chartHeight = 460;
 
     //begin script when window loads
     window.onload = setMap();
@@ -21,7 +19,7 @@
     function setMap() {
         //map frame dimensions
         var width = window.innerWidth * 0.5 - 25,
-            height = window.innerHeight - 170;
+            height = 460;
 
         //create new svg container for the map
         var map = d3
@@ -72,10 +70,9 @@
             setEnumerationUnits(midwestStates, map, path, colorScale);
 
             createTitle();
-
-            createDropdown(csvData, "Select Color/Size", "color");
-            createDropdown(csvData, "Select X", "x");
-            createDropdown(csvData, "Select Y", "y");
+            createDropdown(csvData, "color", "Select Color/Size");
+            createDropdown(csvData, "x", "Select X");
+            createDropdown(csvData, "y", "Select Y");
         };
     };
 
@@ -143,9 +140,9 @@
             .attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
+				var value = d.properties[expressed.color];            
 				if(value) {            	
-					return colorScale(d.properties[expressed]);            
+					return colorScale(d.properties[expressed.color]);            
 				} else {            	
 					return "#ccc";            
 				}    
@@ -153,7 +150,7 @@
             .on("mouseover", function (event, d) {
                 highlight(d.properties);
             })
-            .on("mouseout", function (event, d) {
+            .on("mouseout", function(event, d){
                 dehighlight(d.properties);
             });
     }
@@ -244,35 +241,33 @@
             .on("mouseover", function (event, d) {
                 highlight(d);
             })
-            .on("mouseout", function (event, d) {
+            .on("mouseout", function(event, d){
                 dehighlight(d);
-            });;
+            });
 
     };
-    //create page title
-    function createTitle() {
-        var pageTitle = d3
-            .select(".navbar")
-            .append("h1")
-            .attr("class", "pageTitle")
-            .text("Midwest Energy Dashboard")
-    }
     //function to create a dropdown menu for attribute selection
-    function createDropdown(csvData, selectionText, expressedAttribute) {
+    function createDropdown(csvData,expressedAttribute,menuLabel) {
         //add select element
+        //add dropdown label
+        var label = d3.select(".navbar")
+            .append("p")
+            .attr("class", "dropdown-label")
+            .text(menuLabel + ": ");
+    
         //select .navbar instead of body
         var dropdown = d3.select(".navbar")
             .append("select")
             .attr("class", "dropdown")
             .on("change", function () {
-                changeAttribute(this.value, expressedAttribute, csvData)
-            });
+                changeAttribute(this.value,expressedAttribute,csvData)
+        });
 
         //add initial option
         var titleOption = dropdown.append("option")
             .attr("class", "titleOption")
             .attr("disabled", "true")
-            .text(selectionText);
+            .text(expressed[expressedAttribute]);
 
         //add attribute name options
         var attrOptions = dropdown.selectAll("attrOptions")
@@ -282,35 +277,48 @@
             .attr("value", function (d) { return d })
             .text(function (d) { return d });
     };
+    //create page title
+    function createTitle() {
+        var pageTitle = d3
+            .select(".navbar")
+            .append("h1")
+            .attr("class", "pageTitle")
+            .text("Midwest Energy Dashboard")
+    }
     //dropdown change event handler
-    function changeAttribute(attribute, expressedAttribute, csvData) {
+    function changeAttribute(attribute,expressedAttribute, csvData) {
         //change the expressed color attribute
         expressed[expressedAttribute] = attribute;
 
+        //recreate x and y scales based on the newly expressed value
+        //update y scale
+        var yScale = createYScale(csvData, chartHeight);
+        //update x scale
+        var xScale = createXScale(csvData, chartWidth);
         //recreate the color scale
         var colorScale = makeColorScale(csvData);
 
-        //recolor enumeration units
-        var midwest = d3.selectAll(".midwest").style("fill", function (d) {
-            var value = d.properties[expressed.color];
-            if (value) {
-                return colorScale(d.properties[expressed.color]);
-            } else {
-                return "#ccc";
-            }
-        });
-
-        //recreate x and y scales based on the newly expressed value
-        //update y scale
-        var yScale = createYScale(csvData, chartHeight, expressed.y);
-        //update x scale
-        var xScale = createXScale(csvData, chartWidth, expressed.x);
         //update axes
-        var yaxis = d3.select(".yaxis").call(d3.axisRight().scale(yScale))
-        var xaxis = d3.select(".xaxis").call(d3.axisTop().scale(xScale))
+        var yaxis = d3.select(".yaxis").call(d3.axisRight(yScale))
+        var xaxis = d3.select(".xaxis").call(d3.axisTop(xScale))
+
+        //recolor enumeration units
+        var midwest = d3.selectAll(".midwest")
+            .transition()
+            .duration(1000)
+            .style("fill", function (d) {
+                var value = d.properties[expressed.color];
+                if (value) {
+                    return colorScale(d.properties[expressed.color]);
+                } else {
+                    return "#ccc";
+                }
+        });
 
         //recolor bubbles
         var circles = d3.selectAll(".bubble")
+            .transition()
+            .duration(1000)
             //recolor circles to match the map
             .attr("fill", function (d) {
                 return colorScale(parseFloat(d[expressed.color]));
@@ -328,21 +336,21 @@
             })
             .attr("cy", function (d) {
                 return yScale(parseFloat(d[expressed.y]));
-            })
+            });
     }
     //function to highlight enumeration units and bars
     function highlight(props) {
-        //change stroke
-        var selected = d3.selectAll("." + props.state_abbr)
-            .attr("class", function () {
-                //get current list of classes for each element
-                let elemClasses = this.classList;
-                //add class "selected" to class list
-                elemClasses.add("selected")
-                return elemClasses;
-            })
-        //bring element to front
-        selected.raise()
+         //change stroke
+         var selected = d3.selectAll("." + props.state_abbr)
+         .attr("class", function (d) {
+             //get current list of classes for each element
+             let elemClasses = this.classList;
+             //add 'selected` to classList
+             elemClasses += " selected";
+             //add class "selected" to class list
+             return elemClasses
+         })
+         .raise()
     };
     //function to dehighlight enumeration units and bars
     function dehighlight(props) {
@@ -369,6 +377,5 @@
             .attr("id", props.state_abbr + "_label")
             .html(labelAttribute);
     };
-
 
 })();
