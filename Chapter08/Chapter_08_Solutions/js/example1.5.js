@@ -15,7 +15,7 @@ window.onload = function(){
         .attr("width", 800) //rectangle width
         .attr("height", 400) //rectangle height
 
-    // <rect> is now the operand of the container block
+    // <rect> is now the selected element of the container block
     console.log(container);
 
 

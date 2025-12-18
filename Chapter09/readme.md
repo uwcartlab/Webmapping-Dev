@@ -3,16 +3,15 @@
 Chapter 9: Mapping with D3
 ===========================
 
-Now that you have a basic understanding of some foundational D3 concepts, it is time to make a map! Chapter 9 includes three shorter lessons (one optional) as you work on your final project proposal and ends with Activity 9, creating your first D3 map.
+Now that you have a basic understanding of some foundational D3 concepts, it is time to make a map! Chapter 9 includes two shorter lessons as you work on your final project proposal and ends with Activity 9, creating your first D3 map.
 
 -   In Lesson 1, we cover some useful ancillary tools and techniques, including the TopoJSON data format, the MapShaper web application, and `Promise.all()` for combining multiple AJAX calls.
 -   In Lesson 2, we tackle the somewhat complex but vital topic of D3 map projections, walking through D3's projection and path generators to map spatial data as vector linework in the browser.
--   In the optional Lesson 3, we add a background graticule to our web map to provide additional spatial context.
 
 After this chapter, you should be able to:
 
 -   Convert shapefile and GeoJSON data into TopoJSON format, import data from multiple files to the DOM, and translate TopoJSON data into GeoJSON for display in the browser.
--   Implement an appropriate projection for your choropleth map using a D3 projection generator, correctly manipulate its projection parameters, and draw geometries from spatial data and elements of a graticule using path generators.
+-   Implement an appropriate projection for your choropleth map using a D3 projection generator, correctly manipulate its projection parameters, and draw geometries from spatial data using path generators.
 
 Lesson 1: D3 Helper Tools and Techniques
 ----------------------------------------
@@ -201,7 +200,9 @@ As explained in the `topojson.js` [API Reference](https://github.com/topojson/to
         };
 
 
-In Example 1.5, each TopoJSON object is passed as the first parameter to `topojson.feature()`. The second parameter is the object that holds the details unique to each dataset. In Example 1.2 (line 9), this object was named `"example"`; for our tutorial spatial data, it retains the name of the original file that was passed through MapShaper. Once the data has been translated and assigned to variables, we can examine those variables in the console and see that they are now GeoJSON `FeatureCollection`s:
+In Example 1.5, each TopoJSON object is passed as the first parameter to `topojson.feature()`. The second parameter is the object that holds the details unique to each dataset. In Example 1.5 (line 6), this object was named `"midwestStates"`; for our tutorial spatial data, it retains the name of the original file that was passed through MapShaper. Note, however, that if you change the name of your file after you convert through MapShaper, the name of the object within the file will not change.
+
+Once the data has been translated and assigned to variables, we can examine those variables in the console and see that they are now GeoJSON `FeatureCollection`s:
 
 ![figure9.1.4.png](img/figure9.1.4.png)
 
@@ -218,7 +219,7 @@ Now that you have imported your geospatial data, the next step is to project it.
 
 A _**projection**_ is a mathematical translation from a 3D model of the Earth (called the _reference globe_) to a two-dimensional surface (called the _developable surface_). Projection equations stretch geographic coordinates based on a spheroid, ellipsoid, or geoid model of Earth so that they can be displayed on a planar (two-dimensional) surface, such as your computer screen.
 
-Projections vary by the shape of the plane (_**class**_), by how many times the plane intersects the ellipsoid (_**case**_), and by rotation angle of the plane from north (_**aspect**_). Projections also vary in the topological property they preserve from the original 3D model, distorting others: areas, distances, directions, and/or angles (sometimes described as "shape", although no projection preserves shape). If this is unfamiliar to you, we recommend reviewing the [Map Projections](https://gistbok.ucgis.org/bok-topics/map-projections) entry in the GIS&T Body of Knowledge.
+Projections vary by the shape of the plane (_**class**_), by how many times the plane intersects the ellipsoid (_**case**_), and by rotation angle of the plane from north (_**aspect**_). Projections also vary in the topological property they preserve from the original 3D model, distorting others: areas, distances, directions, and/or angles (sometimes described as "shape", although no projection preserves shape). If this is unfamiliar to you, we recommend reviewing the [Map Projections](https://gistbok-topics.ucgis.org/CV-03-006) entry in the GIS&T Body of Knowledge.
 
 Figure 2.1 demonstrates the distortion that occurs in even the simplest of projections, the Plate Carrée, an equidistant cylindrical projection. This projection is produced by the set of equations \[x = λ, y = ϕ\], where x and y are horizontal and vertical coordinates on a two-dimensional Cartesian grid, λ (lamda) is longitude, and ϕ (phi) is latitude.
 
@@ -236,7 +237,7 @@ However, D3 presents an opportunity to break from Web Mercator, supporting suppo
 
 ###### Figure 2.2: Projections included in D3's Geo Projections module
 
-In the script, D3 implements projections using projection generators. Recall from Chapter 8 that a D3 generator is a function that is returned by a D3 generator method and stored in a local variable. Any D3 projection method will return a _**projection generator**_, which must then be fed into the [`d3.geoPath()`](https://github.com/d3/d3-geo/blob/master/README.md#geoPath) method to produce _another_ generator: the path generator. Finally, the path generator is accessed within a selection block to draw the spatial data as path strings of the `d` attributes of SVG `<path>` elements. This process will become clearer as we build our generators below.
+In the script, D3 implements projections using projection generators. Recall from Chapter 8 that a D3 generator is a function that is returned by a D3 generator method and stored in a local variable. Any D3 projection method will return a _**projection generator**_, which must then be fed into the [`d3.geoPath()`](https://gistbok-topics.ucgis.org/CV-03-006) method to produce _another_ generator: the path generator. Finally, the path generator is accessed within a selection block to draw the spatial data as path strings of the `d` attributes of SVG `<path>` elements. This process will become clearer as we build our generators below.
 
 Let's start with the projection generator (Example 2.1). In this example, we will work with an [Albers equal-area conic projection](https://en.wikipedia.org/wiki/Albers_projection) centered on the U.S. Midwest. You may wish to follow the example at first, then choose a different projection and/or edit the parameters to make the projection appropriate for your data.
 
@@ -284,9 +285,8 @@ In Example 2.1, before we can create the projection, we first write a `map` bloc
 -   [`.parallels()`](https://d3js.org/d3-geo/conic#conic_parallels) specifies the two standard parallels of a conic projection. If the two array values are the same, the projection is a _**tangent**_ case (the plane intersects the globe at one line of latitude); if they are different, it is a _**secant**_ case (the plane intersects the globe at two lines of latitude, slicing through it).
     
 -   [`.scale()`](https://d3js.org/d3-geo/projection#projection_scale) is a factor by which distances between points are multiplied, increasing or decreasing the scale of the map.
-    
 
-The fifth parameter, [`.translate()`](https://github.com/d3/d3-geo/blob/master/README.md#projection_translate) (line 21), offsets the pixel coordinates of the projection's center in the `<svg>` container. Keep these as one-half the `<svg>` width and height to keep your map centered in the container.
+The fifth parameter, [`.translate()`](https://d3js.org/d3-geo/projection#projection_translate) (line 21), offsets the pixel coordinates of the projection's center in the `<svg>` container. Keep these as one-half the `<svg>` width and height to keep your map centered in the container.
 
 Note that D3's projection parameters differ somewhat from the [projection parameters](http://help.arcgis.com/en/geodatabase/10.0/sdk/arcsde/concepts/geometry/coordref/coordsys/projected/mapprojections.htm) commonly used by desktop GIS software. Rather than treating the projection centering holistically, D3 breaks it down into the position of the reference globe and the developable surface. The first two values given to `.rotate()` specify the reference globe's central meridian and central parallel, while `.center()` specifies the latitude and longitude of the developable surface's center. For conic projections, in order to keep north "up" in the center of the map and minimize distortion in your area of focus, you should keep the `.center()` longitude and `.rotate()` latitude each as `0` and assign the center coordinates of your chosen area as the `.center()` latitude and `.rotate()` longitude (Example 1.4 lines 17-18). If the geometric reasons for this are hard to grasp, you can experiment with different parameter values and see their effects using the Albers projection demonstration web app linked below.
 
@@ -298,7 +298,7 @@ Having created a projection function, we can now apply it to our spatial data to
 
 ###### Example 2.2: Creating a path generator in _main.js_
 
-        //Example 2.1 line 15...create Albers equal area conic projection centered on France
+        //Example 2.1 line 15...create Albers equal area conic projection centered on the Midwest
         var projection = d3.geoAlbers()
             .center([-88.3, 42.6])
             .rotate([49, 36, 17])
@@ -342,9 +342,11 @@ Creating the path generator is straightforward—we just create a two-line block
     };
 
 
-In Example 2.3, we add two blocks: one for the background countries (lines 8-11) and one for the regions that will become our choropleth enumeration units (lines 14-21). Because the `countries` block takes the `europeCountries` GeoJSON `FeatureCollection` as a single datum, all of its spatial data is drawn as a single feature. A single SVG `<path>` element is appended to the map container, and its `d` attribute is assigned the `path` generator. This automatically passes the datum to the `path` generator, which returns an SVG path coordinate string to the `<path>` element's `d` attribute. (Do not confuse the `<path> d` attribute with the variable `d` that iteratively holds each datum in a `.data()` block, such as on line 18 of Example 2.3). To recall what a path coordinate string looks like, review Chapter 6 or see Figure 2.3.
+In Example 2.3, we add two blocks: one for the background countries (lines 8-11) and one for the regions that will become our choropleth enumeration units (lines 14-21). Because the `states` block takes the `usStates` GeoJSON `FeatureCollection` as a single datum, all of its spatial data is drawn as a single feature. A single SVG `<path>` element is appended to the map container, and its `d` attribute is assigned the `path` generator. This automatically passes the datum to the `path` generator, which returns an SVG path coordinate string to the `<path>` element's `d` attribute. (Do not confuse the `<path> d` attribute with the variable `d` that iteratively holds each datum in a `.data()` block, such as on line 18 of Example 2.3). To recall what a path coordinate string looks like, review Chapter 6 or see Figure 2.3.
 
-To create our enumeration units, we use the `.selectAll().data().enter()` chain to draw each feature corresponding to a region of France separately (lines 14-16). Recall that `.data()` requires its parameter to be in the form of an array, whereas `topojson.feature()` converts the TopoJSON object into a GeoJSON `FeatureCollection` object. For our `regions` block to work, we need to pull the array of features out of the `FeatureCollection` and pass that array to `.data()`, so we tack on `.features` to the end of line 5 to access it. Once that is done, a new `<path>` element is appended to the map container for each region (line 17). Two class names are assigned to each `<path>`: the generic class name `regions` for all enumeration units and a unique class name based on the region's `adm1_code` attribute (lines 18-20). Each `<path>` is then drawn with the region geometry by the `path` generator (line 21).
+To create our enumeration units, we use the `.selectAll().data().enter()` chain to draw each feature corresponding to each midwest state separately (lines 14-16). Recall that `.data()` requires its parameter to be in the form of an array, whereas `topojson.feature()` converts the TopoJSON object into a GeoJSON `FeatureCollection` object. 
+
+For our `midwest` block to work, we need to pull the array of features out of the `FeatureCollection` and pass that array to `.data()`, so we tack on `.features` to the end of line 5 to access it. Once that is done, a new `<path>` element is appended to the map container for each region (line 17). Two class names are assigned to each `<path>`: the generic class name `regions` for all enumeration units and a unique class name based on the states's `state_abbr` attribute (lines 18-20). Each `<path>` is then drawn with the region geometry by the `path` generator (line 21).
 
 Now we can see our geometries in the browser and use the inspector to distinguish each individual `<path>` element (Figure 2.3).
 

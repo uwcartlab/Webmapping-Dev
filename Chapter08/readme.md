@@ -20,11 +20,11 @@ Lesson 1: D3 Selections and Blocks
 
 ### I. Introduction to D3
 
-[_**D3**_](http://d3js.org/) stands for _**D**ata-**D**riven **D**ocuments_, a JavaScript library for making data-driven web graphics. D3 is an open-source JavaScript library pioneered and maintained by Mike Bostock formerly of the New York Times ([http://bost.ocks.org/mike](http://bost.ocks.org/mike)). Increasingly recognized as a leading data visualization library, D3 simplifies loading and interacting with data and draws all graphics as client-side (in the browser) vectors using the SVG (Scalable Vector Graphics) standard.
+[_**D3**_](http://d3js.org/) stands for _**D**ata-**D**riven **D**ocuments_, a JavaScript library for making data-driven web graphics. D3 is an open-source JavaScript library pioneered and maintained by Mike Bostock formerly of the New York Times ([https://observablehq.com/@mbostock](https://observablehq.com/@mbostock)). Increasingly recognized as a leading data visualization library, D3 simplifies loading and interacting with data and draws all graphics as client-side (in the browser) vectors using the SVG (Scalable Vector Graphics) standard.
 
-D3 presents a different philosophy of web mapping than the majority of technologies that produce web maps: Leaflet and most other web mapping libraries produce _slippy maps_ based on sets of tiled raster images loaded dynamically into the browser when needed. A common complaint from cartographers about slippy maps is their reliance on cylindrical projections, specifically the conformal Web Mercator projection that heavily distorts sizes and thus is inappropriate for visualization at small cartographic scales (i.e., broad geographic regions, such as world maps). The D3 focus on SVG allows for dynamic map projection and direct feature interaction. 
+D3 presents a different philosophy of web mapping than the majority of technologies that produce web maps: Leaflet and most other web mapping libraries produce _slippy maps_ based on sets of tiled raster images (increasingly, vector data) loaded dynamically into the browser when needed. A common complaint from cartographers about slippy maps is their reliance on cylindrical projections, specifically the conformal Web Mercator projection that heavily distorts sizes and thus is inappropriate for visualization at small cartographic scales (i.e., broad geographic regions, such as world maps). The D3 focus on SVG allows for dynamic map projection and direct feature interaction. 
 
-You can review hundreds of fantastic example visualizations created by D3 developers in the [D3 Gallery](https://github.com/mbostock/d3/wiki/Gallery). Most of these examples include the code for their creation right on the page, making duplication and experimentation easier. A word of caution, however: it is tricky to interpret the example documentation before understanding some basics about D3. Likewise, the library's [API documentation](https://github.com/d3/d3/blob/master/API.md), while thorough, can be difficult to apply to your problems without some preliminary background knowledge on D3.
+You can review hundreds of fantastic example visualizations created by D3 developers in the [D3 Gallery](https://observablehq.com/@d3/gallery). Most of these examples include the code for their creation right on the page, making duplication and experimentation easier. A word of caution, however: it is tricky to interpret the example documentation before understanding some basics about D3. Likewise, the library's [API documentation](https://d3js.org/what-is-d3), while thorough, can be difficult to apply to your problems without some preliminary background knowledge on D3.
 
 In this module, we introduce the core principles used by the library to build a simple data-driven graphic. Important formatting rules are highlighted by bullet points; use these to keep your code neater and facilitate the development and debugging process.
 
@@ -34,9 +34,9 @@ To begin, you will need to copy your boilerplate web directory and rename the co
 
 ### II. Selections
 
-The core of D3 is the _**selection**_, allowing its methods to interface with the DOM much like selections made using `querySelector`. Recall that a selector is a string parameter that uses the same syntax as CSS to select an element in the DOM, e.g., `"tagname"`, `".classname"`, `"#id"`, etc.
+The core of D3 is _**selection**_, allowing its methods to interface with the DOM much like selections made using `querySelector`. Recall that a selector is a string parameter that uses the same syntax as CSS to select an element in the DOM, e.g., `"tagname"`, `".classname"`, `"#id"`, etc.
 
-There are two methods used to create a selection: [`d3.select()`](https://github.com/d3/d3-selection/blob/master/README.md#select) and [`d3.selectAll()`](https://github.com/d3/d3-selection/blob/master/README.md#selectAll), which differ by how many markup elements are selected at once. The `d3.select()` method selects only the _first_ element in the DOM that matches the selector. Subsequent methods chained to the selection only affect that element. Conversely, `d3.selectAll()` grabs _all_ markup elements in the DOM that match the selector and applies any subsequent methods to all of the selected elements.
+There are two methods used to create a selection: [`d3.select()`](https://d3js.org/d3-selection/selecting#select) and [`d3.selectAll()`](https://d3js.org/d3-selection/selecting#selection_select), which differ by how many markup elements are selected at once. The `d3.select()` method selects only the _first_ element in the DOM that matches the selector. Subsequent methods chained to the selection only affect that element. Conversely, `d3.selectAll()` grabs _all_ matching elements in the DOM that match the selector and applies any subsequent methods to all of the selected elements.
 
 We will demonstrate the utility of this distinction over the course of the Chapter 8 and 9 lessons. For now, let's start our script by using `d3.select()` to select the HTML `<body>` and D3's `.append()` method to add a new `<svg>` element, which eventually will hold our data-driven graphic. Make the selection in your _main.js_ file (Example 1.1).
 
@@ -80,16 +80,17 @@ In any script that uses chain syntax or blocks (such as D3, Leaflet), the method
 
 *   **_Rule:_** _In any method chain or block, only chain together methods belonging to the library referenced at the start of the chain._
 
-### III. Operands
+### III. Blocks
 
-In Example 1.1, the block chain is assigned to an `<svg>` variable called `container`. In other words, this variable stores the data-driven _**operand**_ receiving the D3 operators, much like [the use of "operand" in UX design](https://gistbok.ucgis.org/bok-topics/user-interface-and-user-experience-uiux-design). To make the purpose of each block clear, assign each block to a variable based on the operand that is returned when the end of the block is reached. The operand variable serves as the _**block name**_. Remember that it is important to place a semicolon _only_ at the _end_ of a block, and not on each line, as a semicolon tells the browser that it has reached the end of a statement, breaking your method chain to conclude a block.
+In Example 1.1, the block chain is assigned to an `<svg>` variable called `container`. In other words, this variable stores a an `<svg>` DOM element, and allows us to maniuplate that element using D3's built-in methods. Later, we'll also see that this approach allows to assign data tables to particular elements. 
+
+To make the purpose of each block clear, assign each block to a variable based on the elements the block is adding to the page. The variable serves as the _**block name**_. For example, a block designed to create an `<svg>` container for a chart might be assigned a variable named `chart`.  Remember that it is important to place a semicolon _only_ at the _end_ of a block, and not on each line, as a semicolon tells the browser that it has reached the end of a statement, breaking your method chain to conclude a block.
 
 *   **_Rule:_** _Only place a semicolon after the last line of a block. If your code results in errors, look for a wayward semicolon._
     
-*   **_Rule:_** _Give each block a name by assigning it to a variable named for the operand it holds._
-    
+*   **_Rule:_** _Give each block a name by assigning it to a variable named for the element, or elements it holds._
 
-Now that the `<svg>` element is our operand, we can add operators to the block that manipulate that element. Recall from Chapter 6 that every SVG requires `width` and `height` attributes. These values can be stored in separate variables that are passed as parameters to the operators. We can use D3's [`.attr()`](https://github.com/d3/d3-selection/blob/master/README.md#selection_attr) operator to assign any attributes to markup elements (Example 1.3).
+Now that the `<svg>` element is our block, we can add operators to the block that manipulate that element. Recall from Chapter 6 that every SVG requires `width` and `height` attributes. These values can be stored in separate variables that are passed as parameters to the operators. We can use D3's [`.attr()`](https://d3js.org/d3-selection/modifying#selection_attr) operator to assign any attributes to markup elements (Example 1.3).
 
 ###### Example 1.3: Adding attributes to the `<svg>` element in _main.js_
 
@@ -102,15 +103,12 @@ Now that the `<svg>` element is our operand, we can add operators to the block t
             .attr("width", w) //assign the width
             .attr("height", h) //assign the height
             .attr("class", "container") //always assign a class (as the block name) for styling and future selection
-    
-
-You also can use the [d3-selection-multi module](https://github.com/d3/d3-selection-multi), which provides a more concise syntax for setting multiple attributes.
 
 In addition to setting the dimensions of an `<svg>` element, it is good practice to add a class name to each newly created element in the block so that it can be easily selected and manipulated by CSS or future D3 script (Example 1.3 line 9). Making the element's class name identical to the block name avoids confusion later in the script.
 
 *   **_Rule:_** _Assign each newly created element a class name identical to the name of the block._
 
-Before closing the block, add an inline style to the `<svg>` element, coloring the background so we can see the container on the page. Note that you also can do this in a CSS stylesheet by applying the style to the `container` class. To add a higher-priority inline style, we can use D3's [`.style()`](https://github.com/d3/d3-selection/blob/master/README.md#selection_style) operator . Upon styling, add a semicolon to close the block (Example 1.4).
+Before closing the block, add an inline style to the `<svg>` element, coloring the background so we can see the container on the page. Note that you also can do this in a CSS stylesheet by applying the style to the `container` class. To add a higher-priority inline style, we can use D3's [`.style()`](https://d3js.org/d3-selection/modifying#selection_style) operator . Upon styling, add a semicolon to close the block (Example 1.4).
 
 ###### Example 1.4: Adding an inline style to the container in _main.js_
 
@@ -121,7 +119,6 @@ Before closing the block, add an inline style to the `<svg>` element, coloring 
             .attr("height", h) //assign the height
             .attr("class", "container") //assign a class name
             .style("background-color", "rgba(0,0,0,0.2)"); //only put a semicolon at the end of the block!
-    
 
 You now can see the SVG container on the page as well as using the Inspector (Figure 1.3).
 
@@ -144,7 +141,7 @@ Once you have added the SVG `container` element, try drawing additional SVG grap
             .attr("width", 800) //rectangle width
             .attr("height", 400) //rectangle height
     
-        // <rect> is now the operand of the container block
+        // <rect> is now the selected element of the container block
     
 
 The problem with Example 1.5 is that appending the `<rect>` element changes the operand from `<svg>` to `<rect>`. Thus, what's now returned to the `container` variable is the `<rect>` element, not the `<svg>`. This means that _only_ the `<rect>` element can be added to the `<svg>`; there is no longer a way to append other elements to the container unless you create a completely new selection. While this is possible to do, it is much more convenient to "save" the existing `<svg>` selection in the `container` variable for multiple uses. This simply involves breaking the block and creating a second block for the inner rectangle (Example 1.6).
@@ -165,7 +162,7 @@ The problem with Example 1.5 is that appending the `<rect>` element changes the 
             .attr("height", 400) //rectangle height
     
 
-Notice that the new `innerRect` block starts by accessing the `container` variable—which holds the `<svg>` as its operand—and appending the `<rect>` element to it. The `container` variable preserves its operand while the `<rect>` element becomes the operand of `innerRect`.
+Notice that the new `innerRect` block starts by accessing the `container` variable—which holds the `<svg>` element—appending the `<rect>` element to it. The `container` variable preserves its operand while the `<rect>` element becomes the operand of `innerRect`.
 
 We can expand this principle into another general rule of thumb:
 
@@ -177,7 +174,7 @@ In Example 1.7, the `container` block creates our `<svg>` and the `innerRect` bl
 
 So far, D3 selections and blocks may seem pretty straightforward. However, where D3 departs from this model is a special property of its selections: the _**datum**_.
 
-In a selection created with `d3.select()` (or their children, such as `innerRect`), the [`.datum()`](https://github.com/d3/d3-selection/blob/master/README.md#selection_datum) operator is used to _**bind**_ a data value to the selection. The `.datum()` method takes a _single data value_ (literally, a [datum](http://dictionary.reference.com/browse/datum)) as a parameter and attaches it to the selection (Example 1.7).
+In a selection created with `d3.select()` (or their children, such as `innerRect`), the [`.datum()`](https://d3js.org/d3-selection/joining#selection_datum) operator is used to _**bind**_ a data value to the selection. The `.datum()` method takes a _single data value_ (literally, a [datum](https://dictionary.cambridge.org/dictionary/english/datum)) as a parameter and attaches it to the selection (Example 1.7).
 
 ###### Example 1.7: Binding a datum to the `innerRect` selection in _main.js_
 
@@ -462,15 +459,15 @@ Lesson 3: Scales, Axes, and Text
 
 ### I. Number Scales
 
-So far, we have seen how D3 uses data to dynamically draw and style markup elements. But what if you want to manipulate the _data_ itself? Sometimes it is necessary to derive output values _as a function of_ your input data—or, put another way, to map a set of input values to a different set of output values. For these scenarios, D3 provides _[**scales**](https://github.com/d3/d3/blob/master/API.md#scales-d3-scale)_. There are five types of scales in D3: continuous, sequential, quantize, threshold, and ordinal. The first four types of scales have a continuous input _**domain**_, or set of values of the independent variable (x) of the scale function.
+So far, we have seen how D3 uses data to dynamically draw and style markup elements. But what if you want to manipulate the _data_ itself? Sometimes it is necessary to derive output values _as a function of_ your input data—or, put another way, to map a set of input values to a different set of output values. For these scenarios, D3 provides _[**scales**](https://d3js.org/d3-scale#d3-scale)_. There are five types of scales in D3: continuous, sequential, quantize, threshold, and ordinal. The first four types of scales have a continuous input _**domain**_, or set of values of the independent variable (x) of the scale function.
 
-*   [**_Continuous scales_**](https://github.com/d3/d3-scale/blob/master/README.md#continuous-scales) map the domain to a continuous _**range**_ of output (y) values; these are useful for linear, power, and log scales (see below), axes, and [time scales](https://github.com/d3/d3-scale/blob/master/README.md#time-scales).
-*   [_**Sequential scales**_](https://github.com/d3/d3-scale/blob/master/README.md#sequential-scales) are similar, but map the domain to an interpolator, or specific range function. These are most useful for creating color ramps.
-*   [_**Quantize scales**_](https://github.com/d3/d3-scale/blob/master/README.md#sequential-scales) have a discrete range, or set of specific output values; we'll use those to create classed choropleths in Chapter 9.
-*   [_**Threshold scales**_](https://github.com/d3/d3-scale/blob/master/README.md#threshold-scales) subdivide the continuous domain according to specified class breaks and map the subsets to discrete range values.
-*   [_**Ordinal scales**_](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales) have a discrete domain, such as names or categories, and a discrete range.
+*   [**_Continuous scales_**](https://d3js.org/d3-scale/linear) map the domain to a continuous _**range**_ of output (y) values; these are useful for linear, power, and log scales (see below), axes, and [time scales](https://d3js.org/d3-scale/time).
+*   [_**Sequential scales**_](https://d3js.org/d3-scale/sequential) are similar, but map the domain to an interpolator, or specific range function. These are most useful for creating color ramps.
+*   [_**Quantize scales**_](https://d3js.org/d3-scale#d3-scale) have a discrete range, or set of specific output values; we'll use those to create classed choropleths in Chapter 9.
+*   [_**Threshold scales**_](https://d3js.org/d3-scale/threshold) subdivide the continuous domain according to specified class breaks and map the subsets to discrete range values.
+*   [_**Ordinal scales**_](https://d3js.org/d3-scale/ordinal#ordinal-scales) have a discrete domain, such as names or categories, and a discrete range.
 
-For now, we will focus on continuous scales. D3 offers several kinds of continuous scales, including linear scales, power scales, log scales, and others. You can explore these on the API documentation page linked above. The most used type of continuous scale is the _**[linear scale](https://github.com/d3/d3-scale/blob/master/README.md#linear-scales)**_, which simply interpolates values using linear algebra. It is important to note that there is nothing inherently _visual_ about a scale; it is merely a mathematical function used to derive a new data value from an input data value (Figure 3.1).
+For now, we will focus on continuous scales. D3 offers several kinds of continuous scales, including linear scales, power scales, log scales, and others. You can explore these on the API documentation page linked above. The most used type of continuous scale is the _**[linear scale](https://d3js.org/d3-scale/linear)**_, which simply interpolates values using linear algebra. It is important to note that there is nothing inherently _visual_ about a scale; it is merely a mathematical function used to derive a new data value from an input data value (Figure 3.1).
 
 ![figure8.3.1.png](img/figure8.3.1.png)
 
@@ -503,7 +500,7 @@ When passed a value, the scale generator will determine where that value lies in
             })
     
 
-We can do the same sort of thing with the center y coordinate of the circles. The difference here is that we have written our equation for `cy` to return a value based on each states's energy production. Therefore, to create a scale for `cy`, we need to determine the minimum and maximum energy values of our dataset for our input domain. While you could write a complicated custom function to pull out these values, a much simpler way to do it is to make use of D3's [`.min()`](https://github.com/d3/d3-array/blob/master/README.md#min) and [`.max()`](https://github.com/d3/d3-array/blob/master/README.md#max) methods. These methods take up to two parameters: the array first, and then an accessor function that tells each method where to look for the values to compare. Once we have found these values and stored them in variables, we can apply them to the domain of our `y` scale (Example 3.3).
+We can do the same sort of thing with the center y coordinate of the circles. The difference here is that we have written our equation for `cy` to return a value based on each states's energy production. Therefore, to create a scale for `cy`, we need to determine the minimum and maximum energy values of our dataset for our input domain. While you could write a complicated custom function to pull out these values, a much simpler way to do it is to make use of D3's [`.min()`](https://d3js.org/d3-array/summarize#min) and [`.max()`](https://d3js.org/d3-array/summarize#max) methods. These methods take up to two parameters: the array first, and then an accessor function that tells each method where to look for the values to compare. Once we have found these values and stored them in variables, we can apply them to the domain of our `y` scale (Example 3.3).
 
 ###### Example 3.3: Determining maximum and minimum energy values in _main.js_
 
@@ -588,7 +585,7 @@ Here is the output of our simple unclassed color scale (Figure 3.4).
 
 ### III. Axes
 
-With four colored, proportionally-sized and -positioned circles, our bubble chart is looking pretty good—except that nobody looking at it would know how to read it! In order to make a data graphic useful, you need to give users _**affordances**_ to contextualize the information they are seeing. One important affordance is an _**axis**_, the familiar reference line with tick marks and numbers that makes the graphic's scale in any one dimension visible to the user. D3 includes a module for automatically drawing axes, although it can be a bit of a trick to apply properly.
+With four colored, proportionally-sized and -positioned circles, our bubble chart is looking pretty good—except that nobody looking at it would know how to read it! In order to make a data graphic useful, you need to give users _**affordances**_ to contextualize the information they are seeing. One important affordance is an _**axis**_, the familiar reference line with tick marks and numbers that makes the graphic's scale in any one dimension visible to the user. D3 includes a module for automatically drawing [axes](https://d3js.org/d3-axis#d3-axis), although it can be a bit of a trick to apply properly.
 
 For our bubble chart, the horizontal scale is basically meaningless; it uses the data array index values as inputs and only functions to separate our circles evenly. Our vertical scale, on the other hand, makes meaningful use of our energy data. Thus, it makes sense to provide the user with a vertical axis as a visual affordance for the information encoded by each circle's `"cy"` attribute. We create a vertical access on the left side of the chart based on our vertical scale using `d3.axisLeft(y)` (Example 3.6).
 

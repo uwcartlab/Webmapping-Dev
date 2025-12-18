@@ -7,6 +7,7 @@ Welcome to Chapter 11, the final set of lessons in the Web Mapping workbook! In 
 
 *   In Lesson 1, we implement the _reexpress_ operator for changing the visualized attribute using the menu selection interface style. Lesson 1 also introduces some basic page styling and layout to improve the interface design.
 *   In Lesson 2, we implement a _retrieve_ operator linked between the map and visualization.
+*   In Optional Lesson 3, we do some interface styling to improve our design.
 
 After this chapter, you should be able to:
 
@@ -18,7 +19,7 @@ Lesson 1: Dynamic Attribute Selection
 
 ### I. Menu Selection (and Title Creation)
 
-So far, we have worked with one attribute in D3 to create the map and data visualization. However, your dataset includes at least five attributes, and we want the user to be able to _reexpress_ among these attributes. In this lesson, we discuss how to implement the _reexpress_ operator using the menu selection interface style.
+So far, we have worked with one attribute in D3 to create the map, and three in the data visualization. However, your dataset includes at least five attributes, and we want the user to be able to _reexpress_ among these attributes. In this lesson, we discuss how to implement the _reexpress_ operator using the menu selection interface style.
 
 For your Leaflet map, you implemented the _**direct manipulation**_ interface style for your interaction operators, enabling the user to probe, drag, or click/tap graphic (non-text) interface controls or the map itself. Specifically, _retrieve_ was implemented with direct manipulation of individual map features, _pan_ and _zoom_ were implemented with direct manipulation of the entire map, and _sequence_ (and possibly _zoom_) was implemented with direct manipulation of a non-map, non-legend, non-isomorphic interface widget (i.e., the slider control).
 
@@ -73,7 +74,6 @@ With the `.navbar` created, we'll want to do a bit of styling. Eventually, the `
     .navbar{
         top:0;
         left:0;
-        height:100px;
         background:lightgray;
         padding:20px;
     }
@@ -103,8 +103,7 @@ At this point, we can style the `.dropdown` class.
         padding: 2px;
         border: 2px solid #999;
         box-shadow: 2px 2px 4px #999;
-        /*chapter 11 example 1.9*/
-        /*margin-right:15px;*/
+        margin-right:15px;
     }
     
     option {
@@ -193,9 +192,7 @@ Steps 1-3 are relatively simple to take care of within an event handler function
 
 In Example 1.4, we add a [`.on()`](https://d3js.org/d3-selection/events#handling-events) operator to the end of the `dropdown` block to listen for a `"change"` interaction on the `<select>` element (line 7). In this context, `.on()` is a D3 method, but it works similarly to Leaflet's `.on()` method. We pass it an anonymous function, within which we call our new event handler, `changeAttribute()` (lines 7-9). 
 
-The parameters of `changeAttribute()` are the `value` of the `<select>` element (referenced by `this`), which holds the attribute selected by the user, as well as our `csvData`. The `csvData` will be used to recreate the color scale.
-
-Note: we also need to add it as a parameter to the `createDropdown()` function (line 2) and its function call within the `callback()`.
+The parameters of `changeAttribute()` are the `value` of the `<select>` element (referenced by `this`), which holds the attribute selected by the user, as well as our `csvData`. The `csvData` will be used to recreate the color scale. _Note: we also need to add it as a parameter to the `createDropdown()` function (line 2) and its function call within `callback()`._
 
 Within `changeAttribute()`, we complete Step 1 in our pseudocode by simply assigning the user-selected attribute to `expressed.color`, or the color attribute of the `expressed` object. 
 
@@ -209,11 +206,11 @@ The map should now recolor itself when a new attribute is selected from the drop
 
 ###### Figure 1.2: Dynamic attribute selection changes the choropleth
 
-Restyling the dynamic visualization (Steps 4-6) is more challenging, but we can use the same principle of recycling a multi-element selection we used for recoloring the enumeration units on the map in Steps 1-3. 
+Restyling the dynamic visualization (Steps 4-5) is more challenging, but we can use the same principle of recycling a multi-element selection we used for recoloring the enumeration units on the map in Steps 1-3. 
 
 The new block should contain a selection of all visualization elements (bars in the bar chart) and each operator that affects an aspect of the element we want to change when a new attribute is selected.
 
- For resizing the circle (Step 4), we need the `r` attributes. Finally, for recoloring the circles (Step 5), we need the `fill` style (Example 1.5).
+For resizing the circle (Step 4), we need the `r` attributes. Finally, for recoloring the circles (Step 5), we need the `fill` style (Example 1.5).
 
 ###### Example 1.9: Manipulating the chart bubbles on attribute change in _main.js_
 
@@ -258,9 +255,9 @@ Note that much of this code is duplicated in the `setChart()` function we create
 
 ###### Figure 1.3: Updating map and chart on attribute selection.
 
-Now that we have a `<select>` element to _reexpress_ the color of the map and the color/size of the chart, we can use same principle to create `<select>` elements to change the variable for both the x and y axes of the bubble chart. This is the perfect opportunity to example the `createDropdown()` function so it can be called three times, creating a dropdown menu for each of the variables we want to _reexpress_.
+Now that we have a `<select>` element to _reexpress_ the color of the map and the color/size of the chart, we can use same principle to create `<select>` elements to change the variable for both the x and y axes of the bubble chart. This is the perfect opportunity to resample the `createDropdown()` function so it can be called three times, creating a dropdown menu for each of the variables we want to _reexpress_.
 
-Currently, the `createDropdown()` function is designed to only work within the context of changing the color/size of the chart—or, more specifically, `expressed.color`. Let's refactor our code so that we input `color` as the variable we want to change when we call both  `createDropdown()` and `changeAttribute()`. This will involve adding a new parameter to both functions (Example 1.10).
+Currently, the `createDropdown()` function is designed to only work within the context of changing the color/size of the chart—or, more specifically, `expressed.color`. Let's refactor our code so that we input `color` as the variable we want to change when we call both `createDropdown()` and `changeAttribute()`. This will involve adding a new parameter to both functions (Example 1.10).
 
 ###### Example 1.10: Adding new parameters to `createDropdown` and `changeAttribute` in _main.js_
 
@@ -473,7 +470,7 @@ We will cover only basic transitions here. You may wish to explore more deeply i
 
 The simplest and most common way to create a D3 transition is to call the `.transition()` method in a selection block with no parameters. Every `.attr()` and `.style()` applied to the selection after calling `.transition()` is implemented through the transition; that is, the current values for those element attributes and styles are replaced gradually with the new values according to the default easing function or a different easing function that is specified by the `.ease()` operator. Values in between are created by an interpolator to form the animation.
 
-Let's start by implementing a transition on the choropleth map (Example 1.9).
+Let's start by implementing a transition on the choropleth map (Example 1.16).
 
 ###### Example 1.16: Implementing a choropleth transition in _main.js_
 
@@ -492,7 +489,7 @@ Let's start by implementing a transition on the choropleth map (Example 1.9).
 
 In Example 1.16, we modify the `midwest` block in the `changeAttribute()` function, adding a `.transition()` operator and a `.duration()` operator above the `.style()` operator (lines 3-4). The [`.duration()`](https://d3js.org/d3-transition/timing#transition_duration) operator specifies a duration in milliseconds; hence the transition will last 1000 milliseconds or 1 second. The effect is to smoothly animate between colors when the color of each enumeration units is changed in response to user input.
 
-The our cirlce chart also can be animated within `changeAttribute()` (Example 1.10).
+The our cirbubblelce chart also can be animated within `changeAttribute()` (Example 1.10).
 
 ###### Example 1.17: Implementing transitions to our bubble chart in _main.js_
         //recolor bubbles
@@ -573,11 +570,11 @@ We then need to style the `selected` class (Example 2.2).
 
 In Example 2.2, we apply blue stroke to the `selected` style, and add a `2px` stroke width. We use this method of adjusting the style because it makes the dehighlighting process simpler, which we'll discuss shortly. Note there are multiple ways to adjust the style of elements when they're highlighted!
 
-In order to make this function work, we need to call it from `"mouseover"` event listeners attached to our `regions` block and our `circles` block (Example 2.3), a common solution for coordinated visualizations, but one that is not mobile-friendly.
+In order to make this function work, we need to call it from `"mouseover"` event listeners attached to our `midwest` block and our `circles` block (Example 2.3), a common solution for coordinated visualizations, but one that is not mobile-friendly.
 
 ###### Example 2.3: Adding mouseover event listeners in _main.js_
 
-        //add midwest states regions to map
+        //add midwest states to map
         var midwest = map
             .selectAll(".midwest")
             .data(midwestStates)
@@ -699,7 +696,7 @@ We now have working linked highlighting and dehighlighting, allowing only one fe
 
 ### III. Dynamic Labels
 
-The final task in support of the _retrieve_ interaction operator is implementing a dynamic label (or popup) showing the attribute values for each region of France. For this tutorial, we implement a simple label that moves with the cursor. To create the dynamic label, write a new `setLabel()` function that makes use of the feature properties (Example 2.6).
+The final task in support of the _retrieve_ interaction operator is implementing a dynamic label (or popup) showing the attribute values for each midwest state. For this tutorial, we implement a simple label that moves with the cursor. To create the dynamic label, write a new `setLabel()` function that makes use of the feature properties (Example 2.6).
 
 ###### Example 2.6: Creating the dynamic label in _main.js_
 
@@ -784,7 +781,7 @@ In Example 2.9, we retrieve the coordinates of the `mousemove` event and manipu
 
 ###### Example 2.10. Adding `mousemove` event listeners in _main.js_
 
-            //Example 2.5 line 1...regions event listeners
+            //Example 2.5 line 1...midwest event listeners
             .on("mouseover", function(event, d){
                 highlight(d.properties);
             })
@@ -835,7 +832,7 @@ For the horizontal (`x`) coordinate, since the label is to the right of the mous
             .style("left", x + "px")
     }
 
-In Example 2.11, to get the width of the label, we select the label then use the [`.node()`](https://github.com/d3/d3-selection/blob/master/README.md#selection_node) operator to return its DOM node (lines 4-5). From there, we can use the native JavaScript [`.getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) method to return an object containing the size of the label, from which we access its `width` property (lines 6-7). We use this value to set the backup x coordinate that will shift the label to the left of the mouse when it approaches the right side of the page (line 12). After setting our default coordinates (`x1` and `y1`) and backup coordinates (`x2` and `y2`), we perform each overflow test, assigning the backup coordinates if the defaults would overflow the page, and the default coordinates if not (lines 16 and 18).
+In Example 2.11, to get the width of the label, we select the label then use the `.node()` operator to return its DOM node (lines 4-5). From there, we can use the native JavaScript [`.getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) method to return an object containing the size of the label, from which we access its `width` property (lines 6-7). We use this value to set the backup x coordinate that will shift the label to the left of the mouse when it approaches the right side of the page (line 12). After setting our default coordinates (`x1` and `y1`) and backup coordinates (`x2` and `y2`), we perform each overflow test, assigning the backup coordinates if the defaults would overflow the page, and the default coordinates if not (lines 16 and 18).
 
 We now have a label that follows the mouse and switches sides to avoid overflow (Figure 2.4).
 
@@ -843,9 +840,100 @@ We now have a label that follows the mouse and switches sides to avoid overflow 
 
 ###### Figure 2.4: Dynamic label
 
-> ### **Implement a dynamic label on your choropleth map and linked visualization.**
+> ### **Implement a dynamic label on your choropleth map and linked visualization.*
 
-### IV. Extending Your Coordinated Visualization
+Lesson 3: (Optional) Additions
+--------------------------------------
+
+At this point, your multivariate coordinate visualization is almost done! While we could stop here, there a few small usability additions we can add to the interface. Because these are optional, we'll only briefly describe them.
+
+### I. Responsive Design
+
+A design can be considered responsive if it accounts for different screen sizes. While responsive design is not the focus of the workbook, some small additions to our code can make our design more mobile-friendly.
+
+Our chart and map width are both set to be roughly half the width of the browser. But what if a user tries access the visualization from their phone? They'd see a side-by-side view of a very thin chart and a very thin map—both too small to be usable. To address this, we need to check the width of the browser and adjust the sizes of our visualizations accordingly. Once the width of the browser is identified, we can choose to keep the current width of the chart for large browsers. For smaller browsers, we can set the chart and map size to be the full width of the browser, which will stack both visualizations atop one another.
+
+While we're at it, we can also set both the chart and map height to be the full height of the browser, minus the height of the `<navbar>` element (approximately 170px, though feel free to experiement with different values) (Example 3.1).
+
+###### Example 3.1. Implementing responsive design in _main.js_
+    ......
+    var expressed = {
+        x: attrArray[2],
+        y: attrArray[0],
+        color: attrArray[1]
+    }
+    //chart frame dimensions
+    //check size of screen, if over 700 pixels, create a chart container the entire width of the screen.
+    //The chart will stack below the map
+    if(window.innerWidth < 700)
+        var chartWidth = window.innerWidth - 40
+    else
+        var chartWidth = window.innerWidth * 0.5 - 25
+
+    var chartHeight = window.innerHeight - 170;
+
+    //begin script when window loads
+    window.onload = setMap();
+
+    function setMap() {
+        //check size of screen, if over 700 pixels, create a map container the entire width of the screen
+        //the map will stack atop the chart
+        if(window.innerWidth < 700)
+            var width = window.innerWidth - 40
+        else
+            var width = window.innerWidth * 0.5 - 25
+
+        var height = window.innerHeight - 170;
+        //create new svg container for the map
+
+### II. Dropdown Styling
+
+Currently, our dropdown menus all use the names of our CSV headers, and they aren't the most descriptive! While we could change the names of the headers in the CSV file, adding spaces and specific characters might create problems in our code. It would be better to implement a naming convention wherein each table header was linked to a particular, human-readable name. Similarly, it would be good to add units to our _retrieve_ popup, as there are multiple units within our dataset.
+
+How can we do all of this at once? Again, the answer lies in object notation (Example 3.2).
+
+###### Example 3.2. Converting `attrArray` to `attrObjects` _main.js_
+    (function () {
+        //pseudo-global variables
+        var attrObjects = [{
+            attr:"coal_twh",
+            label:"Coal",
+            unit:"TeraWatt Hours"
+        },
+        {
+            attr:"gas_twh",
+            label:"Natural Gas",
+            unit:"TeraWatt Hours"
+        },
+        {
+            attr:"wind_twh",
+            label:"Wind",
+            unit:"TeraWatt Hours"
+        },
+        {
+            attr:"solar_twh",
+            label:"Solar",
+            unit:"TeraWatt Hours"
+        },
+        {
+            attr:"cents_kwh",
+            label:"Price",
+            unit:"Cents per KwH"
+        },
+        {
+            attr:"tot_twh",
+            label:"Total",
+            unit:"TerraWatt Hours"
+        }]    
+
+Not shown: updating every instance of `attrArray` to `attrObjects` with the correct property. We also need to add a `loop` and an `if` statement to the declaration of the `titleOption` variable in the `createDropdown()` function. For a more detailed view, check the *_Chapter_11_Solutions* folder.
+
+![figure11.3.1.png](img/figure11.3.1.png)
+
+###### Figure 3.1: An interface with labeled dropdowns!
+
+Extending Your Coordinated Visualization
+--------------------------------------
 
 Here ends the tutorials related to constructing your multivariate coordinated visualization...but your work is not over! If you chose to begin by following the tutorial examples, it is now time to implement your own custom UI/UX design. You should use the principles of cartographic design and interaction that you have learned up to this point to push beyond the basic requirements of the D3 map and make your final product visually stunning and an experience your users will remember.
 
@@ -858,6 +946,8 @@ Consider implementing the following components that have not been covered in the
 *   Additional coordinated data visualizations
     
 *   Metadata and other supplementary information about the topic of your coordinated visualization
+
+*   Adjustments to the site style through CSS
     
 *   Any other tools or features that add to the utility, usability, and/or aesthetics of the coordinated visualization
     

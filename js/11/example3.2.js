@@ -1,7 +1,6 @@
-//create labels for the attributes to make the site more user friendly
+//wrap everything is immediately invoked anonymous function so nothing is in clobal scope
 (function () {
     //pseudo-global variables
-    //wrap attributes into object notation, inlcuding a label and plain-text unit description
     var attrObjects = [{
         attr:"coal_twh",
         label:"Coal",
@@ -31,10 +30,10 @@
         attr:"tot_twh",
         label:"Total",
         unit:"TerraWatt Hours"
-    }]
+    }]    
     //create an object for different expressed variables
     var expressed = {
-        x: attrObjects[4].attr,
+        x: attrObjects[2].attr,
         y: attrObjects[0].attr,
         color: attrObjects[1].attr
     }
@@ -50,12 +49,12 @@
 
     var chartHeight = window.innerHeight - 170;
 
+
     //begin script when window loads
     window.onload = setMap();
 
     //Example 1.3 line 4...set up choropleth map
     function setMap() {
-        //map frame dimensions
         //check size of screen, if over 700 pixels, create a map container the entire width of the screen
         //the map will stack atop the chart
         if(window.innerWidth < 700)
@@ -64,8 +63,8 @@
             var width = window.innerWidth * 0.5 - 25
 
         var height = window.innerHeight - 170;
-
         //create new svg container for the map
+        
         var map = d3
             .select("body")
             .append("svg")
@@ -114,10 +113,9 @@
             setEnumerationUnits(midwestStates, map, path, colorScale);
 
             createTitle();
-
-            createDropdown(csvData, "Select Color/Size", "color");
-            createDropdown(csvData, "Select X", "x");
-            createDropdown(csvData, "Select Y", "y");
+            createDropdown(csvData, "color", "Select Color/Size");
+            createDropdown(csvData, "x", "Select X");
+            createDropdown(csvData, "y", "Select Y");
         };
     };
 
@@ -135,7 +133,6 @@
                 //where primary keys match, transfer csv data to geojson properties object
                 if (geojsonKey == csvKey) {
                     //assign all attributes and values
-                    //update array values based on new object notation
                     attrObjects.forEach(function (attr) {
                         var val = parseFloat(csvState[attr.attr]); //get csv attribute value
                         geojsonProps[attr.attr] = val; //assign attribute and value to geojson properties
@@ -186,9 +183,9 @@
             .attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
+				var value = d.properties[expressed.color];            
 				if(value) {            	
-					return colorScale(d.properties[expressed]);            
+					return colorScale(d.properties[expressed.color]);            
 				} else {            	
 					return "#ccc";            
 				}    
@@ -196,10 +193,10 @@
             .on("mouseover", function (event, d) {
                 highlight(d.properties);
             })
-            .on("mouseout", function (event, d) {
+            .on("mouseout", function(event, d){
                 dehighlight(d.properties);
             })
-            .on("mousemove", moveLabel)
+            .on("mousemove", moveLabel);
     }
     //function to calculate minimum and maximum data values
     //add parameter to calculate the expressed value for the chosen scale
@@ -288,10 +285,54 @@
             .on("mouseover", function (event, d) {
                 highlight(d);
             })
-            .on("mouseout", function (event, d) {
+            .on("mouseout", function(event, d){
                 dehighlight(d);
             })
             .on("mousemove", moveLabel);
+
+    };
+    //function to create a dropdown menu for attribute selection
+    function createDropdown(csvData,expressedAttribute,menuLabel) {
+        //add select element
+        //add dropdown label
+        var label = d3.select(".navbar")
+            .append("p")
+            .attr("class", "dropdown-label")
+            .text(menuLabel + ": ");
+    
+        //select .navbar instead of body
+        var dropdown = d3.select(".navbar")
+            .append("select")
+            .attr("class", "dropdown")
+            .on("change", function () {
+                changeAttribute(this.value,expressedAttribute,csvData)
+        });
+
+        //add initial option
+        var titleOption = dropdown.append("option")
+            .attr("class", "titleOption")
+            .attr("disabled", "true")
+            //retrieve label value from attrObjects
+            .text(function(){
+                //create placeholder variable to store label 
+                var label;
+                //iterate through the attrObjects array
+                attrObjects.forEach(function(attr){
+                    //if current attribute in the array equals the expressedAttribute, set label to object label value
+                    if (attr.attr == expressed[expressedAttribute]){
+                        label = attr.label
+                    }
+                })
+                return label;
+            });
+
+        //add attribute name options
+        var attrOptions = dropdown.selectAll("attrOptions")
+            .data(attrObjects)
+            .enter()
+            .append("option")
+            .attr("value", function (d) { return d.label })
+            .text(function (d) { return d.label });
     };
     //create page title
     function createTitle() {
@@ -301,60 +342,40 @@
             .attr("class", "pageTitle")
             .text("Midwest Energy Dashboard")
     }
-    //function to create a dropdown menu for attribute selection
-    function createDropdown(csvData, selectionText, expressedAttribute) {
-        //add select element
-        //select .navbar instead of body
-        var dropdown = d3.select(".navbar")
-            .append("select")
-            .attr("class", "dropdown")
-            .on("change", function () {
-                changeAttribute(this.value, expressedAttribute, csvData)
-            });
-
-        //add initial option
-        var titleOption = dropdown.append("option")
-            .attr("class", "titleOption")
-            .attr("disabled", "true")
-            .text(selectionText);
-
-        //add attribute name options
-        var attrOptions = dropdown.selectAll("attrOptions")
-            .data(attrObjects)
-            .enter()
-            .append("option")
-            .attr("value", function (d) { return d.attr })
-            .text(function (d) { return d.label });
-    };
     //dropdown change event handler
-    function changeAttribute(attribute, expressedAttribute, csvData) {
+    function changeAttribute(attribute,expressedAttribute, csvData) {
         //change the expressed color attribute
         expressed[expressedAttribute] = attribute;
 
+        //recreate x and y scales based on the newly expressed value
+        //update y scale
+        var yScale = createYScale(csvData, chartHeight);
+        //update x scale
+        var xScale = createXScale(csvData, chartWidth);
         //recreate the color scale
         var colorScale = makeColorScale(csvData);
 
-        //recolor enumeration units
-        var midwest = d3.selectAll(".midwest").style("fill", function (d) {
-            var value = d.properties[expressed.color];
-            if (value) {
-                return colorScale(d.properties[expressed.color]);
-            } else {
-                return "#ccc";
-            }
-        });
-
-        //recreate x and y scales based on the newly expressed value
-        //update y scale
-        var yScale = createYScale(csvData, chartHeight, expressed.y);
-        //update x scale
-        var xScale = createXScale(csvData, chartWidth, expressed.x);
         //update axes
-        var yaxis = d3.select(".yaxis").call(d3.axisRight().scale(yScale))
-        var xaxis = d3.select(".xaxis").call(d3.axisTop().scale(xScale))
+        var yaxis = d3.select(".yaxis").call(d3.axisRight(yScale))
+        var xaxis = d3.select(".xaxis").call(d3.axisTop(xScale))
+
+        //recolor enumeration units
+        var midwest = d3.selectAll(".midwest")
+            .transition()
+            .duration(1000)
+            .style("fill", function (d) {
+                var value = d.properties[expressed.color];
+                if (value) {
+                    return colorScale(d.properties[expressed.color]);
+                } else {
+                    return "#ccc";
+                }
+        });
 
         //recolor bubbles
         var circles = d3.selectAll(".bubble")
+            .transition()
+            .duration(1000)
             //recolor circles to match the map
             .attr("fill", function (d) {
                 return colorScale(parseFloat(d[expressed.color]));
@@ -372,26 +393,29 @@
             })
             .attr("cy", function (d) {
                 return yScale(parseFloat(d[expressed.y]));
-            })
+            });
     }
     //function to highlight enumeration units and bars
     function highlight(props) {
+        //create label
+        setLabel(props)
         //change stroke
         var selected = d3.selectAll("." + props.state_abbr)
-            .attr("class", function () {
+            .attr("class", function (d) {
                 //get current list of classes for each element
                 let elemClasses = this.classList;
+                //add 'selected` to classList
+                elemClasses += " selected";
                 //add class "selected" to class list
-                elemClasses.add("selected")
-                return elemClasses;
+                return elemClasses
             })
-        //bring element to front
-        selected.raise()
-        //add info label
-        setLabel(props)
+            .raise()
     };
     //function to dehighlight enumeration units and bars
     function dehighlight(props) {
+        //remove label
+        d3.select(".infolabel")
+            .remove();
         //change stroke
         var selected = d3.selectAll("." + props.state_abbr)
             .attr("class", function () {
@@ -401,22 +425,12 @@
                 elemClasses.remove("selected")
                 return elemClasses;
             })
-        //remove info label
-        d3.select(".infolabel").remove();
-
     };
     //function to create dynamic label
     function setLabel(props) {
-        var unitLabel
-        //retrieve unit label
-        attrObjects.forEach(function(x){
-            if (expressed.color == x.attr)
-                unitLabel = x.unit
-        })
-
         //label content
         var labelAttribute = "<h1>" + props[expressed.color] +
-            "</h1><b>" + unitLabel + " " + props.state_abbr + "</b>";
+            "</h1><b>" + props.state_abbr + " " + expressed.color + "</b>";
 
         //create info label div
         var infolabel = d3.select("body")

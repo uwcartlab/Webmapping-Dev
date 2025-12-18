@@ -39,12 +39,12 @@ Note that both datasets contain the `state_abbr`. This attribute can act as a pr
         //variables for data join
         var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; 
       
-        //loop through csv to assign each set of csv attribute values to geojson region
+        //loop through csv to assign each set of csv attribute values to geojson states
         for (var i = 0; i < csvData.length; i++) {
-            var csvState = csvData[i]; //the current region
+            var csvState = csvData[i]; //the current state
             var csvKey = csvState.state_abbr; //the CSV primary key
 
-            //loop through geojson regions to find correct state
+            //loop through geojson states to find correct state
             for (var a = 0; a < midwestStates.length; a++) {
                 var geojsonProps = midwestStates[a].properties; //the current state geojson properties
                 var geojsonKey = geojsonProps.state_abbr; //the geojson primary key
@@ -159,7 +159,7 @@ The next step toward creating our choropleth map is to build a color scale that 
 -   _**Natural Breaks**_ classification uses an algorithm (typically Jenks) based on minimizing the statistical distances between data points within each class, emphasizing clusters within the data.
     
 
-It is also possible to implement a piecewise scale wherein you manually manipulate the breakpoints of the data. For a refresher on classification, review the [Statistical Mapping](https://gistbok.ucgis.org/bok-topics/statistical-mapping-enumeration-normalization-classification) entry of the GIS&T Body of Knowledge.
+It is also possible to implement a piecewise scale wherein you manually manipulate the breakpoints of the data. For a refresher on classification, review the [Statistical Mapping](https://gistbok-topics.ucgis.org/CV-03-005) entry of the GIS&T Body of Knowledge.
 
 The following examples demonstrate how to create each of theses three classification schemes. <ins>_**Choose only one of these classification methods**_</ins> to implement for your choropleth map based on your dataset. Switching between classification schemes is an example of the _resymbolize_ operator.
 
@@ -205,7 +205,7 @@ We start by building a quantile color scale. To keep our code neat, we can creat
     };
 
 
-In Example 1.4, we implement the color scale using [`d3.scaleQuantile()`](https://github.com/d3/d3-scale/blob/master/README.md#quantile-scales) to create a quantile scale generator (line 22). The generator takes an input domain that is either continuous or a discrete set of values and maps it to an output range of discrete values. When the domain is continuous, the output is an equal interval scale; when the domain is discrete, a true quantile scale is generated. For the range, rather than letting D3 interpolate between two colors as we did in Chapter 7, we pass an array of five color values derived from [ColorBrewer](http://colorbrewer2.org/) to the `.range()` operator (lines 13-19 and 23). These will be our five class colors in our classification scheme. (Note: You can also reference ColorBrewer scales using [ColorBrewer.js](https://github.com/axismaps/colorbrewer/) or the [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic) plugin).
+In Example 1.4, we implement the color scale using [`d3.scaleQuantile()`](https://d3js.org/d3-scale/quantile#quantile_quantiles) to create a quantile scale generator (line 22). The generator takes an input domain that is either continuous or a discrete set of values and maps it to an output range of discrete values. When the domain is continuous, the output is an equal interval scale; when the domain is discrete, a true quantile scale is generated. For the range, rather than letting D3 interpolate between two colors as we did in Chapter 7, we pass an array of five color values derived from [ColorBrewer](http://colorbrewer2.org/) to the `.range()` operator (lines 13-19 and 23). These will be our five class colors in our classification scheme. (Note: You can also reference ColorBrewer scales using [ColorBrewer.js](https://github.com/axismaps/colorbrewer/) or the [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic) plugin).
 
 To build a quantile scale, we need to assign all of the attribute values for the currently expressed attribute in our multivariate dataset as the scale's domain (line 33). This requires us to build an array of these values using a loop to access the value for each feature in the dataset (lines 26-30). The function then returns the scale generator. Within the callback, we create a `colorScale` variable to accept the scale generator from the `makeColorScale()` function, passing the `csvData` into the function (line 2). We also add the `colorScale` as a parameter sent to `setEnumerationUnits()` (line 5).
 
@@ -243,9 +243,9 @@ Given a two-value input domain and a range array with five output values, the ge
 
 The third major classification scheme, Natural Breaks, tries for a happy medium between quantile and equal interval classification, avoiding the disadvantages of each by finding "natural" clusterings of the data. If the distributions of your attribute values have long tails or several outliers, you should consider implementing a Natural Breaks classification.
 
-To create a Natural Breaks color scale generator, we need to use a D3 [threshold scale](https://github.com/d3/d3-scale/blob/master/README.md#threshold-scales) instead of a quantile scale. The threshold scale generator takes the same discrete array of color strings for its range, but requires a set of specified class breaks for the domain. Thus, a threshold scale also is how you can create a scale with arbitrary class breaks. The number of class breaks in the domain array should be one less than the number of range output values. Any data values that are the same as a class break value are included in the class _above_ the break.
+To create a Natural Breaks color scale generator, we need to use a D3 [threshold scale](https://d3js.org/d3-scale/threshold#threshold-scales) instead of a quantile scale. The threshold scale generator takes the same discrete array of color strings for its range, but requires a set of specified class breaks for the domain. Thus, a threshold scale also is how you can create a scale with arbitrary class breaks. The number of class breaks in the domain array should be one less than the number of range output values. Any data values that are the same as a class break value are included in the class _above_ the break.
 
-To create the breaks, you will need a clustering algorithm. The Jenks algorithm commonly used by cartographers formerly was included in the [Simple Statistics](http://simplestatistics.org/) code library, although now is replaced by the [Cartesian k-means](http://www.cs.toronto.edu/~norouzi/research/papers/ckmeans.pdf) (Ckmeans) algorithm. Ckmeans does an excellent job for our purposes. If you wish to implement a Natural Breaks classification, download _simple-statistics.js_ from the link above, place it in your _lib_ folder, and add a script link to it in your _index.html_. Example 1.6 is an update from Tom MacWright's [Natural Breaks choropleth example](http://bl.ocks.org/tmcw/4969184) that uses the newer Ckmeans algorithm.
+To create the breaks, you will need a clustering algorithm. The Jenks algorithm commonly used by cartographers formerly is not in D3, although the [Cartesian k-means](http://www.cs.toronto.edu/~norouzi/research/papers/ckmeans.pdf) (Ckmeans) algorithm functions similarly. Ckmeans does an excellent job for our purposes. If you wish to implement a Natural Breaks classification, download _simple-statistics.js_ from the link above, place it in your _lib_ folder, and add a script link to it in your _index.html_. 
 
 ###### Example 1.6: Creating a Natural Breaks color scale generator in _main.js_
 
@@ -286,7 +286,7 @@ To create the breaks, you will need a clustering algorithm. The Jenks algorithm 
     };
 
 
-In Example 1.6, we start with a call to `d3.scaleThreshold()` rather than `d3.scaleQuantile()` (line 12). The range remains the same (line 13), and we build a `domainArray` from all expressed attribute values as if we were implementing a quantile scale (lines 16-20). The extra step not present in the other classification schemes is to use the Simple Statistics [`ckmeans()`](http://simplestatistics.org/docs/#ckmeans) method to generate five clusters from our attribute values (line 23). These clusters are returned in the form of a nested array, which you can see in the console if you pass `clusters` to a `console.log()` statement. We then reset the `domainArray` to a new array of break points, using JavaScript's [`.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) method to build a new array out of each cluster's minimum value (lines 25-27). Since the threshold scale includes each break point in the class above it, we want our array of break points to be class minimums, which we select using `d3.min()` (line 26). The final step in formatting the `domainArray` is to remove the first value of the array using the JavaScript [`.shift()`](http://www.w3schools.com/jsref/jsref_shift.asp) method, leaving the correct number of break points (4)—each of which is included by the class above it—in the `domainArray`.
+In Example 1.6, we start with a call to `d3.scaleThreshold()` rather than `d3.scaleQuantile()` (line 12). The range remains the same (line 13), and we build a `domainArray` from all expressed attribute values as if we were implementing a quantile scale (lines 16-20). The extra step not present in the other classification schemes is to use the Simple Statistics `ckmeans()` method to generate five clusters from our attribute values (line 23). These clusters are returned in the form of a nested array, which you can see in the console if you pass `clusters` to a `console.log()` statement. We then reset the `domainArray` to a new array of break points, using JavaScript's [`.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) method to build a new array out of each cluster's minimum value (lines 25-27). Since the threshold scale includes each break point in the class above it, we want our array of break points to be class minimums, which we select using `d3.min()` (line 26). The final step in formatting the `domainArray` is to remove the first value of the array using the JavaScript [`.shift()`](http://www.w3schools.com/jsref/jsref_shift.asp) method, leaving the correct number of break points (4)—each of which is included by the class above it—in the `domainArray`.
 
 Of the three classification schemes, which should we use? It depends on the distribution of our data. Figure 1.3 demonstrates the different bins created by the three classification schemes and shows where each enumeration unit's varA attribute value fits:
 
@@ -331,7 +331,7 @@ This solution works fine if _every_ enumeration unit has a value for the current
 
 ###### Example 1.8: Checking for values when setting fill in _main.js_
 
-    function setEnumerationUnits(franceRegions,map,path,colorScale){	
+    function setEnumerationUnits(midwestStates,map,path,colorScale){	
         //add midwest states to map    
 		var midwest = map
 			.selectAll(".midwest")
@@ -450,9 +450,9 @@ If you try to resize your browser window, you will find that the frames are only
 
 ### II. Adding Bubbles
 
-To make our bubble chart, we need to adapt some of our code from Chapter 8, which we'll expand by making the chart show three variables for comparison. These will include variable for the y-axis, x-axis, and a variable that redundantly encodes both size and color. 
+To make our bubble chart, we need to adapt some of our code from Chapter 8, which we'll expand by making the chart show three variables for comparison. These will include variables for the y-axis, x-axis, and a variable that redundantly encodes both size and color. 
 
-We'll start with `.selectAll()` block that appends a circle to the chart container for each feature. To review chapter 8, the [`<circle>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect) element is used to create circles in SVG graphics. To draw the bars, we use three attributes of `<circle>`: `r`, `cx` (the horizontal coordinate of the left side of the rectangle), `cy` (the vertical coordinate of the rectangle bottom). Let's start by loading our data (Example 2.4).
+We'll start with `.selectAll()` block that appends a circle to the chart container for each feature. To review chapter 8, the [`<circle>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect) element is used to create circles in SVG graphics. To draw the circles, we use three attributes of `<circle>`: `r` (the circle's radius), `cx` (the horizontal coordinate of the left side of the rectangle), `cy` (the vertical coordinate of the rectangle bottom). Let's start by loading our data (Example 2.4).
 
 ###### Example 2.4: Creating a bubble chart in _main.js_
 
@@ -478,7 +478,7 @@ We'll start with `.selectAll()` block that appends a circle to the chart contain
 			})
             .attr("cy",25)
 
-In Example 2.4, to make each circle just wide enough so that they all fit within the container horizontally but have gaps in between, we set the `r` attribute of each circle to 10 pixels. To spread the circles evenly across the container, we set the `cx` attribute of each bar to `i * (chartWidth / csvData.length) + 15`, where i is the index of the datum; this has the effect of moving each circle to the right of the previous one (lines 17-19). Temporarily, we set an arbitrary circle `cy` position of 25, just so the crcles are visible. We deal more with the vertical attributes momentarily, but for now, let's take a look at our evenly-spaced cirles (Figure 2.3).
+In Example 2.4, to make each circle just wide enough so that they all fit within the container horizontally but have gaps in between, we set the `r` attribute of each circle to 10 pixels. To spread the circles evenly across the container, we set the `cx` attribute of each bar to `i * (chartWidth / csvData.length) + 15`, where i is the index of the datum; this has the effect of moving each circle to the right of the previous one (lines 17-19). Temporarily, we set an arbitrary circle `cy` position of 25, just so the crcles are visible. We'll address the vertical attributes momentarily, but for now, let's take a look at our evenly-spaced cirles (Figure 2.3).
 
 ![figure10.2.3.png](img/figure10.2.3.png)
 
@@ -681,7 +681,9 @@ If we take a look in the browser, we'll see that our axes are there, but not per
 
 ###### Figure 3.1: Bubble chart with axes labeled.
 
-To format the axes to be more readable, we need to back up. So far, we've been using manual, or hard-coded, values in our `xScale` and `yScale` domains. These have served us well, but as we move forward, we'll want to calculate minimum and maximum values of our expressed variables programmatically. This will be especially important in Chapter 11 when we incorporate the `reexpress` interaction.
+To format the axes to be more readable, we need to back up and do some refactoring.
+
+So far, we've been using manual, or hard-coded, values for our `xScale` and `yScale` domains. These have served us well, but as we move forward, we'll want to calculate minimum and maximum values of our expressed variables programmatically. This will be especially important in Chapter 11 when we incorporate the `reexpress` interaction, since different attributes have different value ranges.
 
 Let's start by calculating the minimum and maximum values for an expressed variable. Chapter 8 introduced the `d3.min` and `d3.max` functions that were used to easily calculate minimum and maximum values. We're going to create a function that calculates both the minimum and maximum values for a single expressed variable, and returns them in the form of an array so that both values are accessible in a single variable.
 

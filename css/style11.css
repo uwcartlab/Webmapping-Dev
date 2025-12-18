@@ -29,7 +29,6 @@
 .navbar{
     top:0;
     left:0;
-    height:100px;
     background:lightgray;
     padding:20px;
 }
@@ -42,7 +41,7 @@
     border: 2px solid #999;
     box-shadow: 2px 2px 4px #999;
     /*chapter 11 example 1.9*/
-    /*margin-right:15px;*/
+    margin-right:15px;
 }
 option {
     font-weight: normal;
@@ -50,6 +49,7 @@ option {
 /*Example 1.15*/
 .dropdown-label{
     display:inline;
+    
 }
 /*example 2.4*/
 .selected{

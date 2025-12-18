@@ -1,10 +1,10 @@
-//wrap everything is immediately invoked anonymous function so nothing is in clobal scope
+//set breakpoints for map and chart dimensions
 (function () {
     //pseudo-global variables
     var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"]; //list of attributes
     //create an object for different expressed variables
     var expressed = {
-        x: attrArray[2],
+        x: attrArray[4],
         y: attrArray[0],
         color: attrArray[1]
     }
@@ -20,12 +20,12 @@
 
     var chartHeight = window.innerHeight - 170;
 
-
     //begin script when window loads
     window.onload = setMap();
 
     //Example 1.3 line 4...set up choropleth map
     function setMap() {
+        //map frame dimensions
         //check size of screen, if over 700 pixels, create a map container the entire width of the screen
         //the map will stack atop the chart
         if(window.innerWidth < 700)
@@ -34,8 +34,8 @@
             var width = window.innerWidth * 0.5 - 25
 
         var height = window.innerHeight - 170;
+
         //create new svg container for the map
-        
         var map = d3
             .select("body")
             .append("svg")
@@ -84,9 +84,10 @@
             setEnumerationUnits(midwestStates, map, path, colorScale);
 
             createTitle();
-            createDropdown(csvData, "color", "Select Color/Size");
-            createDropdown(csvData, "x", "Select X");
-            createDropdown(csvData, "y", "Select Y");
+
+            createDropdown(csvData, "Select Color/Size", "color");
+            createDropdown(csvData, "Select X", "x");
+            createDropdown(csvData, "Select Y", "y");
         };
     };
 
@@ -154,9 +155,9 @@
             .attr("d", path)
 			.style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed.color];            
+				var value = d.properties[expressed];            
 				if(value) {            	
-					return colorScale(d.properties[expressed.color]);            
+					return colorScale(d.properties[expressed]);            
 				} else {            	
 					return "#ccc";            
 				}    
@@ -164,10 +165,10 @@
             .on("mouseover", function (event, d) {
                 highlight(d.properties);
             })
-            .on("mouseout", function(event, d){
+            .on("mouseout", function (event, d) {
                 dehighlight(d.properties);
             })
-            .on("mousemove", moveLabel);
+            .on("mousemove", moveLabel)
     }
     //function to calculate minimum and maximum data values
     //add parameter to calculate the expressed value for the chosen scale
@@ -256,42 +257,10 @@
             .on("mouseover", function (event, d) {
                 highlight(d);
             })
-            .on("mouseout", function(event, d){
+            .on("mouseout", function (event, d) {
                 dehighlight(d);
             })
             .on("mousemove", moveLabel);
-
-    };
-    //function to create a dropdown menu for attribute selection
-    function createDropdown(csvData,expressedAttribute,menuLabel) {
-        //add select element
-        //add dropdown label
-        var label = d3.select(".navbar")
-            .append("p")
-            .attr("class", "dropdown-label")
-            .text(menuLabel + ": ");
-    
-        //select .navbar instead of body
-        var dropdown = d3.select(".navbar")
-            .append("select")
-            .attr("class", "dropdown")
-            .on("change", function () {
-                changeAttribute(this.value,expressedAttribute,csvData)
-        });
-
-        //add initial option
-        var titleOption = dropdown.append("option")
-            .attr("class", "titleOption")
-            .attr("disabled", "true")
-            .text(expressed[expressedAttribute]);
-
-        //add attribute name options
-        var attrOptions = dropdown.selectAll("attrOptions")
-            .data(attrArray)
-            .enter()
-            .append("option")
-            .attr("value", function (d) { return d })
-            .text(function (d) { return d });
     };
     //create page title
     function createTitle() {
@@ -301,40 +270,60 @@
             .attr("class", "pageTitle")
             .text("Midwest Energy Dashboard")
     }
+    //function to create a dropdown menu for attribute selection
+    function createDropdown(csvData, selectionText, expressedAttribute) {
+        //add select element
+        //select .navbar instead of body
+        var dropdown = d3.select(".navbar")
+            .append("select")
+            .attr("class", "dropdown")
+            .on("change", function () {
+                changeAttribute(this.value, expressedAttribute, csvData)
+            });
+
+        //add initial option
+        var titleOption = dropdown.append("option")
+            .attr("class", "titleOption")
+            .attr("disabled", "true")
+            .text(selectionText);
+
+        //add attribute name options
+        var attrOptions = dropdown.selectAll("attrOptions")
+            .data(attrArray)
+            .enter()
+            .append("option")
+            .attr("value", function (d) { return d })
+            .text(function (d) { return d });
+    };
     //dropdown change event handler
-    function changeAttribute(attribute,expressedAttribute, csvData) {
+    function changeAttribute(attribute, expressedAttribute, csvData) {
         //change the expressed color attribute
         expressed[expressedAttribute] = attribute;
 
-        //recreate x and y scales based on the newly expressed value
-        //update y scale
-        var yScale = createYScale(csvData, chartHeight);
-        //update x scale
-        var xScale = createXScale(csvData, chartWidth);
         //recreate the color scale
         var colorScale = makeColorScale(csvData);
 
-        //update axes
-        var yaxis = d3.select(".yaxis").call(d3.axisRight(yScale))
-        var xaxis = d3.select(".xaxis").call(d3.axisTop(xScale))
-
         //recolor enumeration units
-        var midwest = d3.selectAll(".midwest")
-            .transition()
-            .duration(1000)
-            .style("fill", function (d) {
-                var value = d.properties[expressed.color];
-                if (value) {
-                    return colorScale(d.properties[expressed.color]);
-                } else {
-                    return "#ccc";
-                }
+        var midwest = d3.selectAll(".midwest").style("fill", function (d) {
+            var value = d.properties[expressed.color];
+            if (value) {
+                return colorScale(d.properties[expressed.color]);
+            } else {
+                return "#ccc";
+            }
         });
+
+        //recreate x and y scales based on the newly expressed value
+        //update y scale
+        var yScale = createYScale(csvData, chartHeight, expressed.y);
+        //update x scale
+        var xScale = createXScale(csvData, chartWidth, expressed.x);
+        //update axes
+        var yaxis = d3.select(".yaxis").call(d3.axisRight().scale(yScale))
+        var xaxis = d3.select(".xaxis").call(d3.axisTop().scale(xScale))
 
         //recolor bubbles
         var circles = d3.selectAll(".bubble")
-            .transition()
-            .duration(1000)
             //recolor circles to match the map
             .attr("fill", function (d) {
                 return colorScale(parseFloat(d[expressed.color]));
@@ -352,29 +341,26 @@
             })
             .attr("cy", function (d) {
                 return yScale(parseFloat(d[expressed.y]));
-            });
+            })
     }
     //function to highlight enumeration units and bars
     function highlight(props) {
-        //create label
-        setLabel(props)
         //change stroke
         var selected = d3.selectAll("." + props.state_abbr)
-            .attr("class", function (d) {
+            .attr("class", function () {
                 //get current list of classes for each element
                 let elemClasses = this.classList;
-                //add 'selected` to classList
-                elemClasses += " selected";
                 //add class "selected" to class list
-                return elemClasses
+                elemClasses.add("selected")
+                return elemClasses;
             })
-            .raise()
+        //bring element to front
+        selected.raise()
+        //add info label
+        setLabel(props)
     };
     //function to dehighlight enumeration units and bars
     function dehighlight(props) {
-        //remove label
-        d3.select(".infolabel")
-            .remove();
         //change stroke
         var selected = d3.selectAll("." + props.state_abbr)
             .attr("class", function () {
@@ -384,6 +370,9 @@
                 elemClasses.remove("selected")
                 return elemClasses;
             })
+        //remove info label
+        d3.select(".infolabel").remove();
+
     };
     //function to create dynamic label
     function setLabel(props) {
