@@ -526,7 +526,7 @@ We can do the same sort of thing with the center y coordinate of the circles. Th
             ]);
     
 
-Note that the range is flipped, with a "minimum" value of `440` and a "maximum" of `95`. Like the subtraction in our prior equation, this ensures that higher values are associated with "up" rather than "down", since the \[0,0\] coordinate of the SVG is its upper-left corner. We've chosen these values because they spread our circles most evenly over the inner rectangle of the chart without overflowing it. We now can apply our scale to our energy values in the `cy` anonymous function (Example 3.4).
+Note that the range is flipped, with a "minimum" value of `440` and a "maximum" of `95`. Like the subtraction in our prior equation, this ensures that higher values are associated with "up" rather than "down", since the \[0,0\] coordinate of the SVG is its upper-left corner. We have chosen these values because they spread our circles most evenly over the inner rectangle of the chart without overflowing it. We now can apply our scale to our energy values in the `cy` anonymous function (Example 3.4).
 
 ###### Example 3.4: Applying the y scale to return the circles' center y coordinates in _main.js_
 
@@ -750,7 +750,7 @@ Figure 3.10 illustrates the result.
 
 ###### Figure 3.10: Circle labels
 
-This works quite well, except that the labels are a bit long. Superior's even overflows the container. It would be nice if we could wrap these labels onto two lines. Note that if you search for how to do this online, you are likely to be directed towards [Mike Bostock's tutorial](http://bl.ocks.org/mbostock/7555321) that is quite complicated. It is much simpler to manually break lines using SVG `<tspan>` elements. These are child elements of a `<text>` element that can be independently positioned relative to their parent. We can create a separate `<tspan>` for each line of our label. Instead of setting our `"x"` attribute and text content in the `labels` block, we will instead move these to each of our separate `<tspan>` blocks to horizontally align them and give each one custom content (Example 3.15).
+This works quite well, except that the labels are a bit long. Wisconsin's even overflows the container. It would be nice if we could wrap these labels onto two lines. Note that if you search for how to do this online, you are likely to be directed towards [Mike Bostock's tutorial](http://bl.ocks.org/mbostock/7555321) that is quite complicated. It is much simpler to manually break lines using SVG `<tspan>` elements. These are child elements of a `<text>` element that can be independently positioned relative to their parent. We can create a separate `<tspan>` for each line of our label. Instead of setting our `"x"` attribute and text content in the `labels` block, we will instead move these to each of our separate `<tspan>` blocks to horizontally align them and give each one custom content (Example 3.15).
 
 ###### Example 3.15: creating `<tspan>` elements in _main.js_
 
