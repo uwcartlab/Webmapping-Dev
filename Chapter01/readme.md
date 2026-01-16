@@ -7,7 +7,7 @@ Welcome to the first chapter of Web Mapping! Chapter 1 includes three lessons an
 
 *   In Lesson 1, we will introduce text editors and some basic "boilerplate" HTML used to structure your website.
 *   In Lesson 2, we will discuss how to efficiently set up your web directory and host it through a localhost development server.
-*   In Lesson 3, we will set-up a GitHub account you will use for cloud storage, version control, web hosting, and collaboration with other developers. If you already have used Github in other courses, this will be review. However, you still must commit a "repo" as part of the Activity 1, so please still read carefully.
+*   In Lesson 3, we will set-up the GitHub account you will use for cloud storage, version control, web hosting, and collaboration with other developers. If you already have used Github in other courses, this will be review. However, you still must commit a "repo" as part of the Activity 1, so please still read carefully.
 
 After this chapter, you should be able to:
 
@@ -22,7 +22,7 @@ We break each chapter's material into a set of 3-4 lessons that you should compl
 
 As you read, we include many [links](https://en.wikipedia.org/wiki/Hyperlink) that point to additional reference material. This material is for your reference only, and we recommend returning to these materials when you get stuck at different steps. Importantly, you may want to cycle back to these links towards the end of the course to debug issues specific to your final project, so it is helpful to get a sense of what information is included in the links.
 
-> ### **Occasionally, a link does contain suggested reading, additional downloads, or specific tasks needed to complete the activities. We offset these required "actions" to make them visually obvious in the text. Please follow these directions carefully, as it will be difficult to advance in future lessons without first completing these tasks.**
+> ### **Occasionally, a link contains important reading, additional downloads, or specific tasks needed to complete the activities. We offset these required "actions" to make them visually obvious in the text. Please follow these directions carefully, as it will be difficult to advance in future lessons without first completing these tasks.**
 
     We format example code in code blocks, like this.  
     You can copy-paste this code into a text editor to make it easier to reference the line numbers.
@@ -42,7 +42,7 @@ HTML **_tags_** are keywords composed of reserved words surrounded by angle brac
 
 ### II. Text Editors
 
-_**Code**_ is just text that gets interpreted by various technologies (e.g., by a web browser for HTML) to complete actions or execute instructions. A _**text editor**_ is a software program that facilitates the writing of code. Text editors include features that support coding, such as color-coding reserved words in different code languages, automatically applying indentation and closing tags, and even live preview of the code. Text editors are regularly updated with new features, so it is worth continuously reviewing your choice of text editor. Popular text editors include [Visual Studio Code](https://code.visualstudio.com/), [Aptana Studio](http://www.aptana.com/), [Atom](https://atom.io/), [Brackets](http://brackets.io/), [Notepad++](https://notepad-plus-plus.org/), and [Sublime Text](http://www.sublimetext.com/).
+_**Code**_ is just text that gets interpreted by various technologies (e.g., by a web browser for HTML) to complete actions or execute instructions. A _**text editor**_ is a software program that facilitates the writing of code. Text editors include features that support coding, such as color-coding reserved words in different code languages, automatically applying indentation and closing tags, and even live preview of the code. Text editors are regularly updated with new features, so it is worth continuously reviewing your choice of text editor. Popular text editors include [Visual Studio Code](https://code.visualstudio.com/) (our current preference), [Aptana Studio](http://www.aptana.com/), [Atom](https://atom.io/), [Brackets](http://brackets.io/), [Notepad++](https://notepad-plus-plus.org/), and [Sublime Text](http://www.sublimetext.com/).
 
 You are welcomed to use your preferred text editor.
 
@@ -52,7 +52,7 @@ A _**boilerplate**_ is the minimum starter code needed to begin development.  F
 
 > ### **Download _[unit-1.zip](https://github.com/uwcartlab/unit-1)_ from the uwcartlab GitHub page by clicking "Code" then "Download ZIP". After placing the folder in your preferred location, unzip it, and in your text editor open _index.html_ from the _Chapter01_ folder.**
 
-The HTML boilerplate code in _index.html_ should look like Example 1.1. Every component <ins>_must_</ins> be present in your _index.html_ file, except the `<!-- -->` comments and IE stylesheet check. Importantly: you must use _index.html_ as the name of the homepage to use the directory name as the endpoint of a web url. For instance [www.geography.wisc.edu/cartography/](http://www.geography.wisc.edu/cartography/) is the same as [www.geography.wisc.edu/cartography/index.html](http://www.geography.wisc.edu/cartography/index.html), but shorter and therefore preferred.
+The HTML boilerplate code in _index.html_ should look like Example 1.1. Every component <ins>_must_</ins> be present in your _index.html_ file, except the `<!-- -->` comments and IE stylesheet check. Importantly, you must use _index.html_ as the name of the homepage to use the directory name as the endpoint of a web url. For instance [www.geography.wisc.edu/cartography/](http://www.geography.wisc.edu/cartography/) is the same as [www.geography.wisc.edu/cartography/index.html](http://www.geography.wisc.edu/cartography/index.html), but shorter and therefore preferred.
 
 ###### Example 1.1: Boilerplate code in _index.html_
 
@@ -88,7 +88,7 @@ Note the neatly indented structure of the markup. This is not strictly required 
 
 Different levels of _**indentation**_ represent parent-child relationships in the overall tree structure of the document. Think of this structure as analogous to [Matryoshka dolls](https://en.wikipedia.org/wiki/Matryoshka_doll) that nest inside one another. In the code above, the `<html>` tag is the outermost "doll", the `<head>` and `<body>` are smaller "dolls" sitting inside the `<html>` "doll", and so on. Each new level of indentation is used to represent another nested level of HTML elements, helping you to assess visually how the webpage is structured hierarchically and then identify missing or incorrectly located opening and closing tags. 
 
-The `<!DOCTYPE html>` tag indicates to the browser that this is an HTML5 file. The `<html lang="en">` tag opens the html code, telling the browser to interpret the code as English. In the `<head>` tag, there are two `<meta>` tags: the first declares the character set as UTF-8, which interprets the broadest possible range of ASCII characters; the second `<meta>` tag sets the width of the page to the width of the device monitor, ensuring that the content stays within the available frame regardless of device size. While there are other options available for the `<meta name="viewport">` tag, this is really the only setting that should ever be used, and it <ins>_must_</ins> be included. The `<title>` open and closing tags declare the title of the page; text in between these tags will appear in the tab at the top of the browser page. The `<link>` tag links out to the website stylesheet, and will be covered further below. Finally, the conditional statement `<!--[if IE<9]>`, although it looks like a comment, loads a different stylesheet formatted for old versions of Internet Explorer prior to version 9.
+The `<!DOCTYPE html>` tag indicates to the browser that this is an HTML5 file. The `<html lang="en">` tag opens the html code, telling the browser to interpret the code as English. In the `<head>` tag, there are two `<meta>` tags: the first declares the character set as UTF-8, which interprets the broadest possible range of ASCII characters; the second `<meta>` tag sets the width of the page to the width of the device monitor, ensuring that the content stays within the available frame regardless of device size. While there are other options available for the `<meta name="viewport">` tag, this is really the only setting that should ever be used, and it <ins>_must_</ins> be included. The `<title>` open and closing tags declare the title of the page; text in between these tags will appear in the tab at the top of the browser page. The `<link>` tag links out to the website stylesheet, and will be covered further below. Finally, the conditional statement `<!--[if IE<9]>`, although looking like a comment, loads a different stylesheet formatted for old versions of Internet Explorer prior to version 9.
 
 The `<body>` will contain the majority of the page content you write in HTML. Below your custom HTML is where you should place your `<script>` tags linking to the website's JavaScript. This also will be covered further below.
 
@@ -110,7 +110,7 @@ and then open the file in a browser, you should see what you just added to the p
 
 There are a number of frameworks that have their own boilerplates and directory structures, such as [Bootstrap](https://getbootstrap.com/), used for responsive design across mobile and non-mobile devices. For simplicity's sake, we recommend that you use this boilerplate when completing the following lessons.
 
-> ### **Add content to the body element and then load your _index.html_ file in a browser and check that your content appears in the browser tab. If HTML is completely new to you, we recommend supplemental Codecademy tutorials as part of Activity 2 to complete alongside JavaScript tutorials.**
+> ### **Add content to the body element. Then load your _index.html_ file in a browser and check that your content appears in the browser tab. If HTML is completely new to you, we recommend supplemental Codecademy tutorials as part of Activity 2 to complete alongside JavaScript tutorials.**
 
 Lesson 2: Web Directory Setup
 -----------------------------
