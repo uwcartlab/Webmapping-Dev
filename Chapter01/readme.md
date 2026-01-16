@@ -268,7 +268,7 @@ A new window will pop up (Figure 3.3). There, enter the name of your website, an
 
 ![figure1.3.3.png](img/figure1.3.3.png)
 
-###### Figure 3.3: Setting up your _unit-1_ repository.
+###### Figure 3.3: Setting up your _unit-1_ repository
 
 Once you have created the repository, open your the _unit-1_ directory on your machine and observe that three new files have been created (Figure 3.4):
 
