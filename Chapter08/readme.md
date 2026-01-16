@@ -290,6 +290,8 @@ Let's think about how this might relate to mapping for a moment. In the Leaflet 
                 "properties":{
                     "City":"Tokyo",
                     ...
+				}
+			}
         ]
     }
     
