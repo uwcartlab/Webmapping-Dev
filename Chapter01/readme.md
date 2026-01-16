@@ -168,7 +168,7 @@ You also can add a `<script>` tag without a `src` attribute below the `<div>` to
     </script>
     
 
-If you click on the div element in your browser, you should see:
+If you click on the `<div>` element in your browser, you should see:
 
 ![figure1.2.2.png](img/figure1.2.2.png)
 
@@ -196,7 +196,7 @@ Let's describe each of these folders in your directory structure:
     
 *   _**css**_: This folder holds your custom CSS stylesheets.
     
-*   _**data**_: This folder holds data files used to create your thematic web maps, and thus is not necessary for all websites.  The _data_ folder can hold CSV, GeoJSON, and other open formats that we will cover later. If you ever need to include Esri Shapefiles in your website, place these in a _shapefiles_ subdirectory of the data folder since a shapefile in itself is technically a file directory just like a website.
+*   _**data**_: This folder holds data files used to create your thematic web maps, and thus is not necessary for all websites. The _data_ folder can hold CSV, GeoJSON, and other open formats that we will cover later. If you ever need to include Esri Shapefiles in your website, place these in a _shapefiles_ subdirectory of the data folder since a shapefile in itself is technically a file directory just like a website.
     
 *   _**img**_: This folder holds any images used in your website.
     
@@ -204,7 +204,7 @@ Notice that the boilerplate _index.html_ file already contains two links to exte
 
 ###### Example 2.3: Authorship comment in _style.css_
 
-    /* Stylesheet by Buck E. Badger, 2022 */
+    /* Stylesheet by Buck E. Badger, 2026 */
 
 Next, add a _readme.md_ file to your _lib_, _data_, and _img_ folders. For a real project, you would include relevant files in these folders. For now, a _readme.md_ file will ensure your folders show up on GitHub (Lesson 3).
 
@@ -220,13 +220,13 @@ As you develop your website, you will need to preview it in a browser to see wha
 
 ###### Figure 2.3: Client-server architecture
 
-For security reasons, browsers <ins>_only_</ins> display webpages correctly if the files are passed through a server. This complicates development, as you do not want to push every change to your website to a server just to preview it. However, you can set up a _**local development server**_ on your machine to reliably preview dynamic content such as JavaScript before you post online. As with text editors, there are many options for setting up a local development server, with many common ones requiring additional programming knowledge such as Python SimpleHTTPServer and server frameworks including [WAMP](http://www.wampserver.com/en/) (for Windows), [MAMP](https://www.mamp.info/en/) (for Mac), and [LAMP](http://lamphowto.com/) (for Linux).
+For security reasons, browsers <ins>_only_</ins> display webpages correctly if the files are passed through a server. This complicates development, as you do not want to push every change to your website onto a server just to preview it. However, you can set up a _**local development server**_ on your machine to reliably preview dynamic content such as JavaScript before you post online. As with text editors, there are many options for setting up a local development server, with many common ones requiring additional programming knowledge such as Python SimpleHTTPServer and server frameworks including [WAMP](http://www.wampserver.com/en/) (for Windows), [MAMP](https://www.mamp.info/en/) (for Mac), and [LAMP](http://lamphowto.com/) (for Linux).
 
 We recommend using [Visual Studio Code](https://code.visualstudio.com/) and installing the [Live Server Extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which allows you to create a local server instance. The Visual Studio Code [documentation](https://code.visualstudio.com/docs/getstarted/extensions) provides instructions for installing extensions from within the VS Code app. The Live Server [documentation] describes how to use the extension to create a server. When Live Server is running, it automatically compiles your website and refreshes the browser every time you save files in your web directory.
 
 You can also use [Prepros](https://prepros.io/), a "preprocessor" software application that works similarly. Example screenshots throughout the workbook use either Live Server or Prepros. 
 
-> ### **Preview _unit-1_ using Prepros or Visual Studio Code.** 
+> ### **Preview _unit-1_ using Prepros or Visual Studio Code, or try both to determine your preference.** 
 
 Lesson 3: GitHub Setup
 ----------------------
