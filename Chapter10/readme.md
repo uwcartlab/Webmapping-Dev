@@ -20,7 +20,7 @@ Lesson 1: Dynamic Choropleth Symbolization
 
 ### I. Joining Your Data
 
-The first step of creating a dynamic choropleth map is joining your attribute data to your geospatial data using a common attribute. In Chapter 9, we instructed you to create separate geospatial and attribute datasets, with the former stored in TopoJSON format and the latter in CSV format. It is possible to store your attribute data along with the spatial data as you convert from shapefiles to GeoJSON and TopoJSON formats. However, we have structured the Chapter 9 lesson to separate these files to give you a sense of making multiple AJAX calls using the [Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) method as well as familiarizing you with the different JSON and CSV AJAX methods in D3. Further, you often need to load geospatial data from a database or attribute data from a live stream—combining the two in browser—rather than load a single combined file.
+The first step of creating a dynamic choropleth map is joining your attribute data to your geospatial data using a common attribute. In Chapter 9, we instructed you to create separate geospatial and attribute datasets, with the former stored in TopoJSON format and the latter in CSV format. It is possible to store your attribute data along with the spatial data as you convert from shapefiles to GeoJSON and TopoJSON formats. However, we have structured the Chapter 9 lesson to separate these files to give you a sense of making multiple AJAX calls using the [Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) method as well to familiarize you with the different JSON and CSV AJAX methods in D3. Further, you often need to load geospatial data from a database or attribute data from a live stream—combining the two in browser—rather than load a single combined file.
 
 We will accomplish the data "join" through a nested looping structure. Before writing the looping structure, check to ensure that your attribute data are correctly loading into the browser and are accessible within the DOM. Figure 1.1 shows a console log of one object from our attribute data on the left and the corresponding GeoJSON object in the DOM on the right. Confirm your attribute data have maintained their format from the CSV import.
 
@@ -51,11 +51,11 @@ Note that both datasets contain the `state_abbr`. This attribute can act as a pr
 
                 //where primary keys match, transfer csv data to geojson properties object
                 if (geojsonKey == csvKey) {
-                //assign all attributes and values
-                attrArray.forEach(function (attr) {
-                    var val = parseFloat(csvState[attr]); //get csv attribute value
-                    geojsonProps[attr] = val; //assign attribute and value to geojson properties
-                });
+					//assign all attributes and values
+					attrArray.forEach(function (attr) {
+						var val = parseFloat(csvState[attr]); //get csv attribute value
+						geojsonProps[attr] = val; //assign attribute and value to geojson properties
+					});
                 }
             }
         }
@@ -84,15 +84,15 @@ If you want a more thorough understanding, there are many online resources that 
     //First line of main.js...wrap everything in a self-executing anonymous function to move to local scope
     (function(){
     
-	//pseudo-global variables
-     //list of attributes
-	var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"];
-	var expressed = attrArray[0]; //initial attribute
+		//pseudo-global variables
+		//list of attributes
+		var attrArray = ["coal_twh","gas_twh","wind_twh","solar_twh","cents_kwh","tot_twh"];
+		var expressed = attrArray[0]; //initial attribute
 
-	//begin script when window loads
-    window.onload = setMap();
+		//begin script when window loads
+		window.onload = setMap();
     
-    ... //the rest of the script
+		... //the rest of the script
     
     })(); //last line of main.js
 
