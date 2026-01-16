@@ -450,9 +450,9 @@ If you try to resize your browser window, you will find that the frames are only
 
 ### II. Adding Bubbles
 
-To make our bubble chart, we need to adapt some of our code from Chapter 8, which we'll expand by making the chart show three variables for comparison. These will include variables for the y-axis, x-axis, and a variable that redundantly encodes both size and color. 
+To make our bubble chart, we need to adapt some of our code from Chapter 8, which we will expand by making the chart show three variables for comparison. These will include variables for the y-axis, x-axis, and a variable that redundantly encodes both size and color. 
 
-We'll start with `.selectAll()` block that appends a circle to the chart container for each feature. To review chapter 8, the [`<circle>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect) element is used to create circles in SVG graphics. To draw the circles, we use three attributes of `<circle>`: `r` (the circle's radius), `cx` (the horizontal coordinate of the left side of the rectangle), `cy` (the vertical coordinate of the rectangle bottom). Let's start by loading our data (Example 2.4).
+We will start with `.selectAll()` block that appends a circle to the chart container for each feature. To review chapter 8, the [`<circle>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect) element is used to create circles in SVG graphics. To draw the circles, we use three attributes of `<circle>`: `r` (the circle's radius), `cx` (the horizontal coordinate of the left side of the rectangle), `cy` (the vertical coordinate of the rectangle bottom). Let's start by loading our data (Example 2.4).
 
 ###### Example 2.4: Creating a bubble chart in _main.js_
 
@@ -478,7 +478,7 @@ We'll start with `.selectAll()` block that appends a circle to the chart contain
 			})
             .attr("cy",25)
 
-In Example 2.4, to make each circle just wide enough so that they all fit within the container horizontally but have gaps in between, we set the `r` attribute of each circle to 10 pixels. To spread the circles evenly across the container, we set the `cx` attribute of each bar to `i * (chartWidth / csvData.length) + 15`, where i is the index of the datum; this has the effect of moving each circle to the right of the previous one (lines 17-19). Temporarily, we set an arbitrary circle `cy` position of 25, just so the crcles are visible. We'll address the vertical attributes momentarily, but for now, let's take a look at our evenly-spaced cirles (Figure 2.3).
+In Example 2.4, to make each circle just wide enough so that they all fit within the container horizontally but have gaps in between, we set the `r` attribute of each circle to 10 pixels. To spread the circles evenly across the container, we set the `cx` attribute of each bar to `i * (chartWidth / csvData.length) + 15`, where i is the index of the datum; this has the effect of moving each circle to the right of the previous one (lines 17-19). Temporarily, we set an arbitrary circle `cy` position of 25, just so the crcles are visible. We will address the vertical attributes momentarily, but for now, let's take a look at our evenly-spaced cirles (Figure 2.3).
 
 ![figure10.2.3.png](img/figure10.2.3.png)
 
@@ -551,7 +551,7 @@ We can now see our attribute values are represented on both the x and y axis (Fi
 
 ###### Figure 2.4: Bubble chart with circles positioned using the expressed attribute for both their x and y axes.
 
-Because we're using the same variable for both axes, the resulting chart is a straight, diagonal line. To actually compare multiple variables in our dataset, we need to change how we are defining our `expressed` variables so that we can refer to multiple variables at once. We can do this by transforming the `expressed` variable into an object, with three different attributes for x-axis, y-axis, and color. While we could use three separate variables for each `expressed` attribute, this way they are all stored within a single variable (Example 2.7). 
+Because we are using the same variable for both axes, the resulting chart is a straight, diagonal line. To actually compare multiple variables in our dataset, we need to change how we are defining our `expressed` variables so that we can refer to multiple variables at once. We can do this by transforming the `expressed` variable into an object, with three different attributes for x-axis, y-axis, and color. While we could use three separate variables for each `expressed` attribute, this way they are all stored within a single variable (Example 2.7). 
 
 ###### Example 2.7: Redefining the `expressed` variable as an object in _main.js_
 
@@ -596,7 +596,7 @@ Because we're using the same variable for both axes, the resulting chart is a st
 				return yScale(parseFloat(d[expressed.y]));
 			});
 
-As you can see, we also need to use different syntax throughout the our code whenever we refer to the expressed variable, so that we're referring to the appropriate attribute. For example, for the x-axis, when we're defining the scale, we'll use `expressed.x` (we could also use `expressed['x']`). For the color scale we use `expressed.color`. If you don't follow this syntax after transforming the `expressed` variable into an object, you will likely get errors.
+As you can see, we also need to use different syntax throughout the our code whenever we refer to the expressed variable, so that we are referring to the appropriate attribute. For example, for the x-axis, when we are defining the scale, we will use `expressed.x` (we could also use `expressed['x']`). For the color scale we use `expressed.color`. If you do not follow this syntax after transforming the `expressed` variable into an object, you will likely get errors.
 
 Let's take a look at our chart with a different variable expressed for both the x any y-axis.
 
@@ -614,9 +614,9 @@ With the positions set correctly, we also can use the fill color of each circle 
 				return colorScale(parseFloat(d[expressed.color]));
 			});
 
-We're also going to use the size of the circle to redunantly encode the same variable we're using for color. In theory, we could use circle size to encode a fourth variable, but we'll stick with three to keep things simple.
+We are also going to use the size of the circle to redunantly encode the same variable we are using for color. In theory, we could use circle size to encode a fourth variable, but we will stick with three to keep things simple.
 
-Currently, the `r` value is set to an arbitrary value (`10`). We'll use a similar formula from our size calculation from Chapter 8, with a few minor additions (Example 2.9.).
+Currently, the `r` value is set to an arbitrary value (`10`). We will use a similar formula from our size calculation from Chapter 8, with a few minor additions (Example 2.9.).
 
 ###### Example 2.10: Setting the circle size in _main.js_
 
@@ -643,7 +643,7 @@ As it stands, the bubble chart gives the user a better sense of the shape of our
 
 As you might recall from Chapter 8, adding axes should be quite simple, because we already have `xScale` and `yscale` variables, which are necessary for the generation of both axes. Chapter 8, Section III covers Axes in more detail.
 
-We'll start by creating two axes in the `setChart` function (Example 2.10)
+We will start by creating two axes in the `setChart` function (Example 2.10)
 
 ###### Example 3.1: Adding axes in _main.js_
 
@@ -675,7 +675,7 @@ We'll start by creating two axes in the `setChart` function (Example 2.10)
 
 Note that for the `xaxis`, we add a `transform` attribute. If we don't, our x-axis will draw just above our chart, and therefore not be visible. To remedy this, we offset the axis by the exact height of the chart. This will move it to the very bottom, which is where we want it!
 
-If we take a look in the browser, we'll see that our axes are there, but not perfect(Figure 10.3.1)
+If we take a look in the browser, we will see that our axes are there, but not perfect (Figure 10.3.1)
 
 ![figure10.2.7.png](img/figure10.2.7.png)
 
@@ -683,9 +683,9 @@ If we take a look in the browser, we'll see that our axes are there, but not per
 
 To format the axes to be more readable, we need to back up and do some refactoring.
 
-So far, we've been using manual, or hard-coded, values for our `xScale` and `yScale` domains. These have served us well, but as we move forward, we'll want to calculate minimum and maximum values of our expressed variables programmatically. This will be especially important in Chapter 11 when we incorporate the `reexpress` interaction, since different attributes have different value ranges.
+So far, we have been using manual, or hard-coded, values for our `xScale` and `yScale` domains. These have served us well, but as we move forward, we will want to calculate minimum and maximum values of our expressed variables programmatically. This will be especially important in Chapter 11 when we incorporate the `reexpress` interaction, since different attributes have different value ranges.
 
-Let's start by calculating the minimum and maximum values for an expressed variable. Chapter 8 introduced the `d3.min` and `d3.max` functions that were used to easily calculate minimum and maximum values. We're going to create a function that calculates both the minimum and maximum values for a single expressed variable, and returns them in the form of an array so that both values are accessible in a single variable.
+Let's start by calculating the minimum and maximum values for an expressed variable. Chapter 8 introduced the `d3.min` and `d3.max` functions that were used to easily calculate minimum and maximum values. We are going to create a function that calculates both the minimum and maximum values for a single expressed variable, and returns them in the form of an array so that both values are accessible in a single variable.
 
 ###### Example 3.2: Adding a function to calculate minimum and maximum variable values in _main.js_
 
@@ -707,7 +707,7 @@ There are two parameters to the `getDataValues()` function, `csvData`, which is 
 
 We are also calculating an `adjustment` variable, which will create a buffer around the edges of the chart so that no circles are cut off. To do so, we calculate the total `range` of data, then divide that by the number of variables in our dataset. Ultimately, this will create a decent-sized buffer around the edges of the chart.
 
-Next, we're going to move the `yScale` and `xScale` declarations into their own functions, which will each include reference to the new `getDataValues()` function.
+Next, we are going to move the `yScale` and `xScale` declarations into their own functions, which will each include reference to the new `getDataValues()` function.
 
 ###### Example 3.3: Calculating `xScale` and `yScale` using new functions in _main.js_
 
@@ -734,7 +734,7 @@ In Example 3.3, we create two new functions, `createYScale` and `createXScale`. 
 
 Because the output of the `getDataValues()` is an array, the minimum value is stored as `dataMinMax[0]`, while the maximum value is stored as `dataMinMax[1]`. In both functions, we use these values to create linear scales, based on the chart sizes, incorporating minimum and maximum values into the domain. For the y-scale, we go from maximum to minimum `.domain([dataMinMax[1], dataMinMax[0]])`, and the x-scale from maximum to minimum `domain([dataMinMax[0], dataMinMax[1]])`. Again we do this because our y scale is drawn from top to bottom, meaning maximum values will be at the top, while the x-scale is drawn from left to right, meaning maximum values will be on the right.
 
-Finally, we're going to move our axis generation into its own function, too. This function will input our `chart` svg variable, `chartHeight` for the x-axis transformation, as well as the `yScale` and `xScale` variables.
+Finally, we are going to move our axis generation into its own function, too. This function will input our `chart` svg variable, `chartHeight` for the x-axis transformation, as well as the `yScale` and `xScale` variables.
 
 ###### Example 3.4: Creating a function that generates our chart axes in _main.js_
 
@@ -771,7 +771,7 @@ Let's take a look at the results (Figure 10.3.2)!
 
 ###### Figure 3.2: Bubble chart with axes nicely formatted.
 
-We're now ready to move on to Chapter 11, and with it, _interactions_.
+We are now ready to move on to Chapter 11, and with it, _interactions_.
 
 > ### **Create a bubble chart or alternative data visualization that clearly expresses the both attribute values shown on the choropleth map as well as one or more additional attribute variables.**
 
