@@ -22,7 +22,7 @@ Lesson 1: D3 Selections and Blocks
 
 [_**D3**_](http://d3js.org/) stands for _**D**ata-**D**riven **D**ocuments_, a JavaScript library for making data-driven web graphics. D3 is an open-source JavaScript library pioneered and maintained by Mike Bostock formerly of the New York Times ([https://observablehq.com/@mbostock](https://observablehq.com/@mbostock)). Increasingly recognized as a leading data visualization library, D3 simplifies loading and interacting with data and draws all graphics as client-side (in the browser) vectors using the SVG (Scalable Vector Graphics) standard.
 
-D3 presents a different philosophy of web mapping than the majority of technologies that produce web maps: Leaflet and most other web mapping libraries produce _slippy maps_ based on sets of tiled raster images (increasingly, vector data) loaded dynamically into the browser when needed. A common complaint from cartographers about slippy maps is their reliance on cylindrical projections, specifically the conformal Web Mercator projection that heavily distorts sizes and thus is inappropriate for visualization at small cartographic scales (i.e., broad geographic regions, such as world maps). The D3 focus on SVG allows for dynamic map projection and direct feature interaction. 
+D3 presents a different philosophy of web mapping than the amajority of technologies that produce web maps: Leaflet and most other web mapping libraries produce _slippy maps_ based that break multiscale maps into square raster or (increasingly) vector tiles that are dynamically into the browser when needed. A common complaint from cartographers about slippy maps is their reliance on cylindrical projections, specifically the conformal Web Mercator projection that heavily distorts sizes and thus is inappropriate for visualization at small cartographic scales (i.e., broad geographic regions, such as world maps). The D3 focus on SVG allows for dynamic map projection and direct feature interaction. 
 
 You can review hundreds of fantastic example visualizations created by D3 developers in the [D3 Gallery](https://observablehq.com/@d3/gallery). Most of these examples include the code for their creation right on the page, making duplication and experimentation easier. A word of caution, however: it is tricky to interpret the example documentation before understanding some basics about D3. Likewise, the library's [API documentation](https://d3js.org/what-is-d3), while thorough, can be difficult to apply to your problems without some preliminary background knowledge on D3.
 
@@ -50,7 +50,7 @@ We will demonstrate the utility of this distinction over the course of the Chapt
     };
     
 
-This selects the HTML `<body>` element from the DOM and returns it to the variable `container`. Notice that there is <ins>_no_</ins> semicolon after the `.select()` method. This is intentional, as we will be chaining more methods to it momentarily. D3 utilizes method chaining to an even greater extent than we used with vanilla javascript.
+This selects the HTML `<body>` element from the DOM and returns it to the variable `container`. Notice that there is <ins>_no_</ins> semicolon after the `.select()` method. This is intentional, as we will be chaining more methods to it momentarily. D3 utilizes method chaining to an even greater extent than we used with vanilla JavaScript.
 
 At this stage, if you were to issue the statement `console.log(container)`, you would see a nested array with the `body` as the only element (Figure 1.1).
 
@@ -82,7 +82,7 @@ In any script that uses chain syntax or blocks (such as D3, Leaflet), the method
 
 ### III. Blocks
 
-In Example 1.1, the block chain is assigned to an `<svg>` variable called `container`. In other words, this variable stores a an `<svg>` DOM element, and allows us to maniuplate that element using D3's built-in methods. Later, we'll also see that this approach allows to assign data tables to particular elements. 
+In Example 1.1, the block chain is assigned to an `<svg>` variable called `container`. In other words, this variable stores a an `<svg>` DOM element, and allows us to maniuplate that element using D3's built-in methods. Later, we also will see that this approach allows us to assign data tables to particular elements. 
 
 To make the purpose of each block clear, assign each block to a variable based on the elements the block is adding to the page. The variable serves as the _**block name**_. For example, a block designed to create an `<svg>` container for a chart might be assigned a variable named `chart`.  Remember that it is important to place a semicolon _only_ at the _end_ of a block, and not on each line, as a semicolon tells the browser that it has reached the end of a statement, breaking your method chain to conclude a block.
 
@@ -144,7 +144,7 @@ Once you have added the SVG `container` element, try drawing additional SVG grap
         // <rect> is now the selected element of the container block
     
 
-The problem with Example 1.5 is that appending the `<rect>` element changes the operand from `<svg>` to `<rect>`. Thus, what's now returned to the `container` variable is the `<rect>` element, not the `<svg>`. This means that _only_ the `<rect>` element can be added to the `<svg>`; there is no longer a way to append other elements to the container unless you create a completely new selection. While this is possible to do, it is much more convenient to "save" the existing `<svg>` selection in the `container` variable for multiple uses. This simply involves breaking the block and creating a second block for the inner rectangle (Example 1.6).
+The problem with Example 1.5 is that appending the `<rect>` element changes the operand from `<svg>` to `<rect>`. Thus, what is now returned to the `container` variable is the `<rect>` element, not the `<svg>`. This means that _only_ the `<rect>` element can be added to the `<svg>`; there is no longer a way to append other elements to the container unless you create a completely new selection. While this is possible to do, it is much more convenient to "save" the existing `<svg>` selection in the `container` variable for multiple uses. This simply involves breaking the block and creating a second block for the inner rectangle (Example 1.6).
 
 ###### Example 1.6: Correctly formatted blocks with only one change of operand each in _main.js_
 
