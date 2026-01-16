@@ -300,7 +300,7 @@ In Chapter 9, we will find that D3 allows us to map GeoJSON geometries by making
 
 ### II. Joining Data
 
-In Lesson 1, we looked at how to bind a single datum to a selection for styling a markup element. But what if you want to create a _set_ of new elements and style them in a way that corresponds to a bunch of different data values? Say we want to create a bubble chart, with several circles styled according to a dataset. D3 supports manipulation and rendering of multiple data elements through a  _[**join**](http://bost.ocks.org/mike/join/)_, as a result "joining" an array of data to an array of markup elements in the DOM.
+In Lesson 1, we looked at how to bind a single datum to a selection for styling a markup element. But what if you want to create a _set_ of new elements and style them in a way that corresponds to a bunch of different data values? Say we want to create a bubble chart, with several circles styled according to a dataset. D3 supports manipulation and rendering of multiple data elements through a  _[**join**](http://bost.ocks.org/mike/join/)_, which results in joining" an array of data to an array of markup elements in the DOM.
 
 The first thing we need to create a join is a data array, such as those presented in Example 2.1. Add a simple array of numbers to the existing script from Lesson 1 (Example 2.3).
 
