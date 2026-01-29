@@ -150,11 +150,11 @@ Steps 1-3 are relatively simple to take care of within an event handler function
 ###### Example 1.8: Adding a change listener and handler function in _main.js_
 
     function callback(data){
-        ...
+        ////...
         createTitle();
         createDropdown(csvData);
     }
-    ...
+    ////...
     //function to create a dropdown menu for attribute selection
     function createDropdown(csvData){
         //add select element
@@ -166,7 +166,7 @@ Steps 1-3 are relatively simple to take care of within an event handler function
             });
         
         //OPTIONS BLOCKS FROM EXAMPLE 1.1
-        ...
+        ////...
     };
     
     //dropdown change event handler
@@ -262,11 +262,11 @@ Currently, the `createDropdown()` function is designed to only work within the c
 ###### Example 1.10: Adding new parameters to `createDropdown()` and `changeAttribute()` in _main.js_
 
     function callback(data){
-        ...
+        ////...
         createTitle();
         createDropdown(csvData,'color');
     }
-    ...
+    ////...
 
     //function to create a dropdown menu for attribute selection
     function createDropdown(csvData,expressedAttribute) {
@@ -278,13 +278,13 @@ Currently, the `createDropdown()` function is designed to only work within the c
             .on("change", function () {
                 changeAttribute(this.value,expressedAttribute,csvData)
         });
-        ...
+        ////...
     }
     //dropdown change event handler
     function changeAttribute(attribute, expressedAttribute, csvData) {
         //change the expressed color attribute
         expressed[expressedAttribute] = attribute;
-    ...
+    ////...
     
 In Example 1.10, we add a new parameter called `expressedAttribute` to both `createDropdown()` and `changeAttribute()`. When we initially call `createDropdown()` in the `callback()` function, we pass the value `color` as the `expressedAttribute` (line 4). We pass this value as a string. If we were to pass `expressed.color` itself, the function would pass a copy of the variable, and any changes we made wouldn't change its original value. Instead, by passing `color` as a string we can eventually change the value of `expressed.color` using bracket notation:`expressed[expressedAttribute]`. In the example, this is the functional equivalent of writing `expressed['color']`, which is the same as `expressed.color`.
 
@@ -293,7 +293,7 @@ Next, we can use the `createDropdown()` function to create 2 additional `<select
 ###### Example 1.11: Creating two new dropdowns in _main.js_
 
     function callback(data){
-        ...
+        ////...
         createTitle();
         createDropdown(csvData,'color');
         createDropdown(csvData,'y');
@@ -312,7 +312,7 @@ Finally, we have to adjust the `cx` and `cy` attributes of each `<bubble>` eleme
 ###### Example 1.12: Expanding `createDropdown()` in _main.js_
     (function () {
         //pseudo-global variables
-        ...
+        ////...
         var expressed = {
             x: attrArray[2],
             y: attrArray[0],
@@ -321,7 +321,7 @@ Finally, we have to adjust the `cx` and `cy` attributes of each `<bubble>` eleme
         //chart frame dimensions
         var chartWidth = window.innerWidth * 0.5 - 25,
         chartHeight = 460
-        ...
+        ////...
         //dropdown change event handler
         function changeAttribute(attribute, expressedAttribute, csvData) {
             //change the expressed color attribute
@@ -364,7 +364,7 @@ Finally, we have to adjust the `cx` and `cy` attributes of each `<bubble>` eleme
                 .attr("cy", function (d) {
                     return yScale(parseFloat(d[expressed.y]));
                 })
-...
+////...
 
 In example 1.12, we begin by declaring `chartWidth` and `chartHeight` as pseudo-global variables. Then, within `changeAttribute`, we declared new `xScale` and `yScale` variables using the `createXScale()` and `createYScale()` functions, respectively.
 
@@ -385,7 +385,7 @@ Let's update the axes (Example 1.13).
 ###### Example 1.13: Expanding `createDropdown()` in _main.js_
     //dropdown change event handler
     function changeAttribute(attribute, expressedAttribute, csvData) {
-        ...
+        ////...
         var colorScale = makeColorScale(csvData);
          //update axes
         var xaxis = d3.select(".xaxis").call()
@@ -410,14 +410,14 @@ We can add a new parameter to the `createDropdown()` function that contains the 
 ###### Example 1.14: Creating dropdown menu labels _main.js_
 
     function callback(data){
-        ...
+        ////...
         createTitle();
         createDropdown(csvData, "color", "Select Color/Size");
         createDropdown(csvData, "x", "Select X");
         createDropdown(csvData, "y", "Select Y");
-        ...
+        ////...
     }
-    ...
+    ////...
     //function to create a dropdown menu for attribute selection
     function createDropdown(csvData,expressedAttribute,menuLabel) {
         //BEGINNING OF FUNCTION
@@ -426,7 +426,7 @@ We can add a new parameter to the `createDropdown()` function that contains the 
             .append("p")
             .attr("class", "dropdown-label")
             .text(menuLabel + ": ");
-        ...
+        ////...
         //add initial option
         var titleOption = dropdown.append("option")
             .attr("class", "titleOption")
@@ -563,7 +563,6 @@ We then need to style the `selected` class (Example 2.2).
 
 ###### Example 2.2: adding the `selected` class style in _style.css_
 
-    /*example 2.2*/
     .selected{
         stroke: blue;
         stroke-width: 2px;
@@ -598,7 +597,7 @@ In order to make this function work, we need to call it from `"mouseover"` event
                 highlight(d.properties);
             });
 
-        //...
+       ///...
     
        //set circles for each state
         var circles = chart.selectAll(".circles") //create an empty selection
@@ -676,7 +675,7 @@ This completes the `dehighlight()` function, which needs its own event listeners
                 dehighlight(d.properties);
             });
     
-            //...
+            //////...
     
             //circle event listeners
             .on("mouseover", function(event, d){
@@ -725,14 +724,14 @@ Since we want our label to show up whenever the user highlights a region or bar,
         function highlight(props) {
             //create label
             setLabel(props)
-            ...
+            ////...
         }
         //function to dehighlight enumeration units and bars
             function dehighlight(props) {
                 //remove label
                 d3.select(".infolabel")
                     .remove();
-            ...
+            ////...
         }
 
 Without any styles applied to it, the label will look pretty messy. Let's style it in _style.css_ (Example 2.8).
@@ -762,7 +761,7 @@ These styles create a simple black label with white text (Figure 2.3).
 
 ###### Figure 2.3: Styled info label
 
-The next step, of course, is to  reposition the label to the cursor. D3 provides a handy object, [`event`](https://github.com/d3/d3-selection/blob/master/README.md#handling-events), that holds the position of the mouse whenever an event is fired on the page. We can use [`event`](https://github.com/d3/d3-selection/blob/master/README.md#handling-events) to set the position of our info label in a function that is called on any `mousemove` event (Example 2.9).
+The next step, of course, is to reposition the label to the cursor. D3 provides a handy object, [`event`](https://github.com/d3/d3-selection/blob/master/README.md#handling-events), that holds the position of the mouse whenever an event is fired on the page. We can use [`event`](https://github.com/d3/d3-selection/blob/master/README.md#handling-events) to set the position of our info label in a function that is called on any `mousemove` event (Example 2.9).
 
 ###### Example 2.9: Adding movement to the info label in _main.js_
 
@@ -782,7 +781,7 @@ In Example 2.9, we retrieve the coordinates of the `mousemove` event and manipu
 
 ###### Example 2.10. Adding `mousemove` event listeners in _main.js_
 
-            //Example 2.5 line 1...midwest event listeners
+            //Example 2.5 line 1////...midwest event listeners
             .on("mouseover", function(event, d){
                 highlight(d.properties);
             })
@@ -791,9 +790,9 @@ In Example 2.9, we retrieve the coordinates of the `mousemove` event and manipu
             })
             .on("mousemove", moveLabel);
     
-            //...
+            //////...
     
-            //Example 2.5 line 11...bars event listeners
+            //Example 2.5 line 11////...bars event listeners
             .on("mouseover", function(event, d){
                 highlight(d);
             })
@@ -807,7 +806,7 @@ This should cause our info label to follow our mouse. However, there are two min
 
 To tackle the first problem, we need to test whether the label has moved off the page, and if so, switch which side of the mouse it appears on. For the vertical (`y`) coordinate, we can test whether the event Y coordinate is less than our desired distance between mouse and upper-left label corner; if it is, then we need to use a vertical coordinate for the label that switches which side of the mouse it is on vertically (Example 2.11).
 
-For the horizontal (`x`) coordinate, since the label is to the right of the mouse by default, we need to check to see if the label overflows the right side of the page. To do this, we need to access the browser window's `innerWidth` property and subtract the width of the label and a desired buffer from it. If the event X coordinate is greater than this number, the label will overflow the right side of the page and should therefore be switched to the left side of the mouse (Example 2.10).
+For the horizontal (`x`) coordinate, since the label is to the right of the mouse by default, we need to check to see if the label overflows the right side of the page. To do this, we need to access the browser window's `innerWidth` property and subtract the width of the label and a desired buffer from it. If the event X coordinate is greater than this number, the label will overflow the right side of the page and should therefore be switched to the left side of the mouse (Example 2.11).
 
 ###### Example 2.11: Dynamically switching label position to avoid page overflow in _main.js_
 
@@ -833,7 +832,7 @@ For the horizontal (`x`) coordinate, since the label is to the right of the mous
             .style("left", x + "px")
     }
 
-In Example 2.11, to get the width of the label, we select the label then use the `.node()` operator to return its DOM node (lines 4-5). From there, we can use the native JavaScript [`.getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) method to return an object containing the size of the label, from which we access its `width` property (lines 6-7). We use this value to set the backup x coordinate that will shift the label to the left of the mouse when it approaches the right side of the page (line 12). After setting our default coordinates (`x1` and `y1`) and backup coordinates (`x2` and `y2`), we perform each overflow test, assigning the backup coordinates if the defaults would overflow the page, and the default coordinates if not (lines 16 and 18).
+In Example 2.11, to get the width of the label, we select the label then use the `.node()` operator to return its DOM node (lines 4-5). From there, we can use the native JavaScript [`.getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) method to return an object containing the size of the label, from which we access its `width` property (line 6). We use this value to set the backup x coordinate that will shift the label to the left of the mouse when it approaches the right side of the page (line 14). After setting our default coordinates (`x1` and `y1`) and backup coordinates (`x2` and `y2`), we perform each overflow test, assigning the backup coordinates if the defaults would overflow the page, and the default coordinates if not (lines 14 and 16).
 
 We now have a label that follows the mouse and switches sides to avoid overflow (Figure 2.4).
 
@@ -857,7 +856,7 @@ Our chart and map width are both set to be roughly half the width of the browser
 While we are at it, we can also set both the chart and map height to be the full height of the browser, minus the height of the `<navbar>` element (approximately 170px, though feel free to experiement with different values) (Example 3.1).
 
 ###### Example 3.1. Implementing responsive design in _main.js_
-    ...
+    ////...
     var expressed = {
         x: attrArray[2],
         y: attrArray[0],
@@ -936,7 +935,7 @@ Not shown: updating every instance of `attrArray` to `attrObjects` with the corr
 Extending Your Coordinated Visualization
 --------------------------------------
 
-Here ends the tutorials related to constructing your multivariate coordinated visualization...but your work is not over! If you chose to begin by following the tutorial examples, it is now time to implement your own custom UI/UX design. You should use the principles of cartographic design and interaction that you have learned up to this point to push beyond the basic requirements of the D3 map and make your final product visually stunning and an experience your users will remember.
+Here ends the tutorials related to constructing your multivariate coordinated visualization////...but your work is not over! If you chose to begin by following the tutorial examples, it is now time to implement your own custom UI/UX design. You should use the principles of cartographic design and interaction that you have learned up to this point to push beyond the basic requirements of the D3 map and make your final product visually stunning and an experience your users will remember.
 
 Consider implementing the following components that have not been covered in these chapters:
 
