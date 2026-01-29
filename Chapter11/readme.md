@@ -23,7 +23,7 @@ So far, we have worked with one attribute in D3 to create the map, and three in 
 
 For your Leaflet map, you implemented the _**direct manipulation**_ interface style for your interaction operators, enabling the user to probe, drag, or click/tap graphic (non-text) interface controls or the map itself. Specifically, _retrieve_ was implemented with direct manipulation of individual map features, _pan_ and _zoom_ were implemented with direct manipulation of the entire map, and _sequence_ (and possibly _zoom_) was implemented with direct manipulation of a non-map, non-legend, non-isomorphic interface widget (i.e., the slider control).
 
-For your D3 map, we use _menu selection_ to select one of your multivariate attributes from a list. Menu selection is considered "slightly less direct than direct", as it typically uses text rather than graphics as the _visual affordance_ for list items. However, menu selection can include graphics alongside text, such as icons representing different list items (common for mobile), or replace text entirely with graphics (e.g., a map preview). Menu selection has the advantages of lower pointing mileage and greater pointing efficiency while also constraining user interaction to a subset of options (versus the more free form fill-in). Ultimately, we're going to create three dropdown menus, one that controls the variable represented on the x-axis of your bubble chart, one for the y-axis, and one for the color/size, which will also adjust the variable expressed on the choropleth map.
+For your D3 map, we use _menu selection_ to select one of your multivariate attributes from a list. Menu selection is considered "slightly less direct than direct", as it typically uses text rather than graphics as the _visual affordance_ for list items. However, menu selection can include graphics alongside text, such as icons representing different list items (common for mobile), or replace text entirely with graphics (e.g., a map preview). Menu selection has the advantages of lower pointing mileage and greater pointing efficiency while also constraining user interaction to a subset of options (versus the more free form fill-in). Ultimately, we are going to create three dropdown menus, one that controls the variable represented on the x-axis of your bubble chart, one for the y-axis, and one for the color/size, which will also adjust the variable expressed on the choropleth map.
 
 Menu selection has the added advantage of being easy to implement compared to direct manipulation. We make use of a simple HTML `<select>` element for _reexpress_, which provides a dropdown menu for attribute selection. Start by adding a [`<select>`](http://www.w3schools.com/tags/tag_select.asp) dropdown menu to the DOM. 
 
@@ -59,7 +59,7 @@ The `titleOption` block creates an `<option>` element with instructional text to
 
 Finally, the `attrOptions` block uses the `.selectAll().data().enter()` sequence with the `attrArray` pseudo-global variable that holds an array of our attribute names, creating one `<option>` element for each attribute (lines 15-18). Each option element is assigned a `value` attribute that holds the name of the attribute, and its `text` content (what the user sees as the visual affordance) is also assigned the name of the attribute (lines 19-20).
 
-Once we have created the dropdown menu, we need to do a little styling so that it does not simply appear below the previous element on the page. There are many different ways we could adjust the layout on the webpage, but in this case we're going to create a new element in `index.html` with a class of `.navbar`.
+Once we have created the dropdown menu, we need to do a little styling so that it does not simply appear below the previous element on the page. There are many different ways we could adjust the layout on the webpage, but in this case we are going to create a new element in `index.html` with a class of `.navbar`.
 
 ###### Example 1.3: Adding an `.navbar` element in _index.html_
 
@@ -67,7 +67,7 @@ Once we have created the dropdown menu, we need to do a little styling so that i
         <!--example 1.2-->
         <div class="navbar"></div>
         
-With the `.navbar` created, we'll want to do a bit of styling. Eventually, the `.navbar` element will contain our dropdown menus, as well as a page title. For now, we're going to position it at the top of the page and give it a light background.
+With the `.navbar` created, we'll want to do a bit of styling. Eventually, the `.navbar` element will contain our dropdown menus, as well as a page title. For now, we are going to position it at the top of the page and give it a light background.
 
 ###### Example 1.3: Styling our new `navbar` in _style.css_
 
@@ -110,7 +110,7 @@ At this point, we can style the `.dropdown` class.
         font-weight: normal;
     }
 
-In Example 1.5, we add a `z-index` of 10 ensures that the menu `<select>` element floats to the top of all other elements on the page (line 5). We then add `font` styles and `padding` around the text. Finally, a `border` and `box-shadow` make the `<select>` element visually float above the map, making it more obvious to the user (lines 10-11). The `option` style simply reduces the text of the `<option>` elements in the menu to normal weight so they are not emboldened by the `font-weight` of the `<select>` element (lines 14-16).
+In Example 1.5, we add a `z-index` of 10 ensures that the menu `<select>` element floats to the top of all other elements on the page (line 2). We then add `font` styles and `padding` around the text  (line 3-6). Finally, a `border` and `box-shadow` make the `<select>` element visually float above the map, making it more obvious to the user (lines 7-8). The `option` style simply reduces the text of the `<option>` elements in the menu to normal weight so they are not emboldened by the `font-weight` of the `<select>` element (lines 12-14).
 
 The final step of formatting the `.navbar` is adding a title to the webpage.
 
@@ -150,11 +150,11 @@ Steps 1-3 are relatively simple to take care of within an event handler function
 ###### Example 1.8: Adding a change listener and handler function in _main.js_
 
     function callback(data){
-        ......
+        ...
         createTitle();
         createDropdown(csvData);
     }
-    ......
+    ...
     //function to create a dropdown menu for attribute selection
     function createDropdown(csvData){
         //add select element
@@ -166,7 +166,7 @@ Steps 1-3 are relatively simple to take care of within an event handler function
             });
         
         //OPTIONS BLOCKS FROM EXAMPLE 1.1
-        ......
+        ...
     };
     
     //dropdown change event handler
@@ -190,7 +190,7 @@ Steps 1-3 are relatively simple to take care of within an event handler function
     }
 
 
-In Example 1.4, we add a [`.on()`](https://d3js.org/d3-selection/events#handling-events) operator to the end of the `dropdown` block to listen for a `"change"` interaction on the `<select>` element (line 7). In this context, `.on()` is a D3 method, but it works similarly to Leaflet's `.on()` method. We pass it an anonymous function, within which we call our new event handler, `changeAttribute()` (lines 7-9). 
+In Example 1.8, we add a [`.on()`](https://d3js.org/d3-selection/events#handling-events) operator to the end of the `dropdown` block to listen for a `"change"` interaction on the `<select>` element (line 13-15). In this context, `.on()` is a D3 method, but it works similarly to Leaflet's `.on()` method. We pass it an anonymous function, within which we call our new event handler, `changeAttribute()`. 
 
 The parameters of `changeAttribute()` are the `value` of the `<select>` element (referenced by `this`), which holds the attribute selected by the user, as well as our `csvData`. The `csvData` will be used to recreate the color scale. _Note: we also need to add it as a parameter to the `createDropdown()` function (line 2) and its function call within `callback()`._
 
@@ -210,7 +210,7 @@ Restyling the dynamic visualization (Steps 4-5) is more challenging, but we can 
 
 The new block should contain a selection of all visualization elements (bars in the bar chart) and each operator that affects an aspect of the element we want to change when a new attribute is selected.
 
-For resizing the circle (Step 4), we need the `r` attributes. Finally, for recoloring the circles (Step 5), we need the `fill` style (Example 1.5).
+For resizing the circle (Step 4), we need the `r` attributes. Finally, for recoloring the circles (Step 5), we need the `fill` style (Example 1.9).
 
 ###### Example 1.9: Manipulating the chart bubbles on attribute change in _main.js_
 
@@ -247,7 +247,7 @@ For resizing the circle (Step 4), we need the `r` attributes. Finally, for recol
             })
     }
 
-In Example 1.9, we create a selection of all circles in our bubble chart (`d3.selectAll(".bubble")`). We then reset the `fill` attribute of each bubble to recolor them based on the newly selected attriute. To resize the bubbles, we reset the `r` attribute using the same forumla from the inital creation of the bubble chart, with the new expressed attribute values.
+In Example 1.9, we create a selection of all circles in our bubble chart (`d3.selectAll(".bubble")`). We then reset the `fill` attribute of each bubble to recolor them based on the newly selected attriute. To resize the bubbles, we reset the `r` attribute using the same formula from the inital creation of the bubble chart, with the new expressed attribute values (Figure 1.3).
 
 Note that much of this code is duplicated in the `setChart()` function we created in Chapter 10. 
 
@@ -259,14 +259,14 @@ Now that we have a `<select>` element to _reexpress_ the color of the map and th
 
 Currently, the `createDropdown()` function is designed to only work within the context of changing the color/size of the chart—or, more specifically, `expressed.color`. Let's refactor our code so that we input `color` as the variable we want to change when we call both `createDropdown()` and `changeAttribute()`. This will involve adding a new parameter to both functions (Example 1.10).
 
-###### Example 1.10: Adding new parameters to `createDropdown` and `changeAttribute` in _main.js_
+###### Example 1.10: Adding new parameters to `createDropdown()` and `changeAttribute()` in _main.js_
 
     function callback(data){
-        ......
+        ...
         createTitle();
         createDropdown(csvData,'color');
     }
-    ......
+    ...
 
     //function to create a dropdown menu for attribute selection
     function createDropdown(csvData,expressedAttribute) {
@@ -278,13 +278,13 @@ Currently, the `createDropdown()` function is designed to only work within the c
             .on("change", function () {
                 changeAttribute(this.value,expressedAttribute,csvData)
         });
-        ......
+        ...
     }
     //dropdown change event handler
     function changeAttribute(attribute, expressedAttribute, csvData) {
         //change the expressed color attribute
         expressed[expressedAttribute] = attribute;
-    ......
+    ...
     
 In Example 1.10, we add a new parameter called `expressedAttribute` to both `createDropdown()` and `changeAttribute()`. When we initially call `createDropdown()` in the `callback()` function, we pass the value `color` as the `expressedAttribute` (line 4). We pass this value as a string. If we were to pass `expressed.color` itself, the function would pass a copy of the variable, and any changes we made wouldn't change its original value. Instead, by passing `color` as a string we can eventually change the value of `expressed.color` using bracket notation:`expressed[expressedAttribute]`. In the example, this is the functional equivalent of writing `expressed['color']`, which is the same as `expressed.color`.
 
@@ -293,7 +293,7 @@ Next, we can use the `createDropdown()` function to create 2 additional `<select
 ###### Example 1.11: Creating two new dropdowns in _main.js_
 
     function callback(data){
-        ......
+        ...
         createTitle();
         createDropdown(csvData,'color');
         createDropdown(csvData,'y');
@@ -303,7 +303,7 @@ Next, we can use the `createDropdown()` function to create 2 additional `<select
 
 If you open the browser, you should see a row of three dropdown menus in the `<navbar>` element. However, the latter two dropdown menus currently have no function. If you recall, within `changeAttriubutes()`, we only set `<circle>` size and color to change, not their `x` and `y` position. To adjust the x and y position, we have to make several additions.
 
-First, we need to adjust the x and y `scale` variables so the circles will be positioned correctly. If we don't adjust the scales, we will likely get circles positioned off the chart. We can use our existing functions, `createYScale()` and `createXScale()`, to do this. However, because each function requires the either `chartHeight` or `chartWidth` variables to be passed as parameters, we're going to run into a scoping issue.
+First, we need to adjust the x and y `scale` variables so the circles will be positioned correctly. If we don't adjust the scales, we will likely get circles positioned off the chart. We can use our existing functions, `createYScale()` and `createXScale()`, to do this. However, because each function requires the either `chartHeight` or `chartWidth` variables to be passed as parameters, we are going to run into a scoping issue.
 
 Currently, both `chartHeight` and `chartWidth` are created within the `setChart()` function. To make these variables accessible to the `changeAttribute()` function, we need to move them to the top of our wrapper function, declaring them as pseudo-global variables.
 
@@ -312,7 +312,7 @@ Finally, we have to adjust the `cx` and `cy` attributes of each `<bubble>` eleme
 ###### Example 1.12: Expanding `createDropdown()` in _main.js_
     (function () {
         //pseudo-global variables
-        ......
+        ...
         var expressed = {
             x: attrArray[2],
             y: attrArray[0],
@@ -321,7 +321,7 @@ Finally, we have to adjust the `cx` and `cy` attributes of each `<bubble>` eleme
         //chart frame dimensions
         var chartWidth = window.innerWidth * 0.5 - 25,
         chartHeight = 460
-        ......
+        ...
         //dropdown change event handler
         function changeAttribute(attribute, expressedAttribute, csvData) {
             //change the expressed color attribute
@@ -364,6 +364,7 @@ Finally, we have to adjust the `cx` and `cy` attributes of each `<bubble>` eleme
                 .attr("cy", function (d) {
                     return yScale(parseFloat(d[expressed.y]));
                 })
+...
 
 In example 1.12, we begin by declaring `chartWidth` and `chartHeight` as pseudo-global variables. Then, within `changeAttribute`, we declared new `xScale` and `yScale` variables using the `createXScale()` and `createYScale()` functions, respectively.
 
@@ -384,7 +385,7 @@ Let's update the axes (Example 1.13).
 ###### Example 1.13: Expanding `createDropdown()` in _main.js_
     //dropdown change event handler
     function changeAttribute(attribute, expressedAttribute, csvData) {
-        ......
+        ...
         var colorScale = makeColorScale(csvData);
          //update axes
         var xaxis = d3.select(".xaxis").call()
@@ -409,14 +410,14 @@ We can add a new parameter to the `createDropdown()` function that contains the 
 ###### Example 1.14: Creating dropdown menu labels _main.js_
 
     function callback(data){
-        ......
+        ...
         createTitle();
         createDropdown(csvData, "color", "Select Color/Size");
         createDropdown(csvData, "x", "Select X");
         createDropdown(csvData, "y", "Select Y");
-        ......
+        ...
     }
-    ......
+    ...
     //function to create a dropdown menu for attribute selection
     function createDropdown(csvData,expressedAttribute,menuLabel) {
         //BEGINNING OF FUNCTION
@@ -425,7 +426,7 @@ We can add a new parameter to the `createDropdown()` function that contains the 
             .append("p")
             .attr("class", "dropdown-label")
             .text(menuLabel + ": ");
-        ......
+        ...
         //add initial option
         var titleOption = dropdown.append("option")
             .attr("class", "titleOption")
@@ -435,7 +436,7 @@ We can add a new parameter to the `createDropdown()` function that contains the 
 
 In Example 1.14, we add another parameter to the `createDropdown()` function called `menuLabel`. We then `append()` a new `<p>` element into the `.navbar`, and set its text to the value of our new `menuLabel` parameter. We give this `<p>` element a class name of `dropdown-label`.
 
-While we're here, we also adjust the text of the initial dropdown title option to match the initial variable. To do so, we adjust the `.text()` to be the expressed variable `expressed[expressedAttribute]`.
+While we are here, we also adjust the text of the initial dropdown title option to match the initial variable. To do so, we adjust the `.text()` to be the expressed variable `expressed[expressedAttribute]`.
 
 However, if you take a look in the browser, you'll see that two of our dropdown menus have dissapeared, and one is cut-off (Figure 1.6)!
 
@@ -489,7 +490,7 @@ Let's start by implementing a transition on the choropleth map (Example 1.16).
 
 In Example 1.16, we modify the `midwest` block in the `changeAttribute()` function, adding a `.transition()` operator and a `.duration()` operator above the `.style()` operator (lines 3-4). The [`.duration()`](https://d3js.org/d3-transition/timing#transition_duration) operator specifies a duration in milliseconds; hence the transition will last 1000 milliseconds or 1 second. The effect is to smoothly animate between colors when the color of each enumeration units is changed in response to user input.
 
-The our cirbubblelce chart also can be animated within `changeAttribute()` (Example 1.10).
+The our cirbubblelce chart also can be animated within `changeAttribute()` (Example 1.17).
 
 ###### Example 1.17: Implementing transitions to our bubble chart in _main.js_
         //recolor bubbles
@@ -597,7 +598,7 @@ In order to make this function work, we need to call it from `"mouseover"` event
                 highlight(d.properties);
             });
 
-        //......
+        //...
     
        //set circles for each state
         var circles = chart.selectAll(".circles") //create an empty selection
@@ -724,14 +725,14 @@ Since we want our label to show up whenever the user highlights a region or bar,
         function highlight(props) {
             //create label
             setLabel(props)
-            ......
+            ...
         }
         //function to dehighlight enumeration units and bars
             function dehighlight(props) {
                 //remove label
                 d3.select(".infolabel")
                     .remove();
-            ......
+            ...
         }
 
 Without any styles applied to it, the label will look pretty messy. Let's style it in _style.css_ (Example 2.8).
@@ -853,10 +854,10 @@ A design can be considered responsive if it accounts for different screen sizes.
 
 Our chart and map width are both set to be roughly half the width of the browser. But what if a user tries access the visualization from their phone? They'd see a side-by-side view of a very thin chart and a very thin map—both too small to be usable. To address this, we need to check the width of the browser and adjust the sizes of our visualizations accordingly. Once the width of the browser is identified, we can choose to keep the current width of the chart for large browsers. For smaller browsers, we can set the chart and map size to be the full width of the browser, which will stack both visualizations atop one another.
 
-While we're at it, we can also set both the chart and map height to be the full height of the browser, minus the height of the `<navbar>` element (approximately 170px, though feel free to experiement with different values) (Example 3.1).
+While we are at it, we can also set both the chart and map height to be the full height of the browser, minus the height of the `<navbar>` element (approximately 170px, though feel free to experiement with different values) (Example 3.1).
 
 ###### Example 3.1. Implementing responsive design in _main.js_
-    ......
+    ...
     var expressed = {
         x: attrArray[2],
         y: attrArray[0],
