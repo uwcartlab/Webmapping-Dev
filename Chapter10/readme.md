@@ -300,7 +300,7 @@ Notice in Figure 1.3 that mapping our example datset with an equal interval clas
 
 ### IV. Coloring the Enumeration Units
 
-Once we have constructed our color scale generator, the final step in coloring our choropleth is to apply it to our `regions` selection. We can do this by adding a `.style()` operator at the end of the `regions` block with an anonymous function that applies the `colorScale` to each datum's currently expressed attribute value to return the fill (Example 1.7 lines 13-15).
+Once we have constructed our color scale generator, the final step in coloring our choropleth is to apply it to our `regions` selection. We can do this by adding a `.style()` operator at the end of the `regions` block with an anonymous function that applies the `colorScale` to each datum's currently expressed attribute value to return the fill (Example 1.7 lines 12-14).
 
 ###### Example 1.7: Coloring enumeration units in _main.js_
 
@@ -361,7 +361,7 @@ Lesson 2: Drawing a Coordinated Visualization
 
 ### I. Responsively Framing a Data Visualization
 
-Next, create a _**coordinated visualization**_, linking the _reexpress_ and _retrieve_ interaction operators between the choropleth map and a second visual isomorph communicating different aspects of the attribute information. In Lesson 2, we create a simple bubble chart as our coordinated visualization; logic for linking user interactions between the map and graphic are covered in Chapter 11.
+Next, create a _**coordinated visualization**_, linking the _reexpress_ and _retrieve_ interaction operators between the choropleth map and a second visual isomorph communicating different aspects of the attribute information. In Lesson 2, we create a simple bubble chart as our coordinated visualization; the logic for linking user interactions between the map and graphic are covered in Chapter 11.
 
 You should not feel limited to the bubble chart as your only coordinated option. If you are feeling adventurous and want to try implementing a different type of visualization, revisit the [D3 Examples Gallery](https://observablehq.com/@d3/gallery) for inspiration, looking for examples that work well with multivariate data (i.e., multiple attributes). If you do decide to stick with a bubble chart, make sure you customize its look and feel. Do _not_ simply use the default styles shown in this tutorial.
 
@@ -400,7 +400,7 @@ In Example 2.1, we anticipate that we eventually will need the `csvData` and the
 
 ###### Figure 2.1: The bubble chart container viewed with the Inspector
 
-It is poor UI design to have our chart appear immediately below our map on the page. Much of the utility of a coordinated visualization is in the ability of the users to see both the map and visualization at the same time so as to compare the two. Thus, our map has to become smaller so that the chart can fit next to it. While we could simply adjust the map `width` variable with a guess as to how wide the map should be, it is better to use some principles of _**responsive web design**_ to adapt the content and styling of the webpage to the user's device. If you are unfamiliar with responsive design, it may be worth reviewing the [Mobile Maps and Responsive Design](https://research.utwente.nl/en/publications/mobile-maps-and-responsive-design/) article by Britta Ricker and Robert Roth.
+It is poor UI design to have our chart appear immediately below our map on the page. Much of the utility of a coordinated visualization is in the ability of the users to see both the map and visualization at the same time in order to compare the two. Thus, our map has to become smaller so that the chart can fit next to it. While we could simply adjust the map `width` variable with a guess as to how wide the map should be, it is better to use some principles of _**responsive web design**_ to adapt the content and styling of the webpage to the user's device. If you are unfamiliar with responsive design, it may be worth reviewing the [Mobile Maps and Responsive Design](https://research.utwente.nl/en/publications/mobile-maps-and-responsive-design/) article by Britta Ricker and Robert Roth.
 
 We can make the widths of the chart and map responsive to each other by setting each to a fraction of the browser window's `innerWidth` property, which reflects the internal width of the browser frame (Example 2.2).
 
@@ -478,7 +478,7 @@ We will start with `.selectAll()` block that appends a circle to the chart conta
 			})
             .attr("cy",25)
 
-In Example 2.4, to make each circle just wide enough so that they all fit within the container horizontally but have gaps in between, we set the `r` attribute of each circle to 10 pixels. To spread the circles evenly across the container, we set the `cx` attribute of each bar to `i * (chartWidth / csvData.length) + 15`, where i is the index of the datum; this has the effect of moving each circle to the right of the previous one (lines 17-19). Temporarily, we set an arbitrary circle `cy` position of 25, just so the crcles are visible. We will address the vertical attributes momentarily, but for now, let's take a look at our evenly-spaced cirles (Figure 2.3).
+In Example 2.4, to make each circle just wide enough so that they all fit within the container horizontally but have gaps in between, we set the `r` attribute of each circle to 10 pixels. To spread the circles evenly across the container, we set the `cx` attribute of each bar to `i * (chartWidth / csvData.length) + 15`, where i is the index of the datum; this has the effect of moving each circle to the right of the previous one (lines 18-20). Temporarily, we set an arbitrary circle `cy` position of 25, just so the crcles are visible. We will address the vertical attributes momentarily, but for now, let's take a look at our evenly-spaced cirles (Figure 2.3).
 
 ![figure10.2.3.png](img/figure10.2.3.png)
 
@@ -513,7 +513,7 @@ Now let's select new variables for each attribute, starting with the `cy` coordi
 
 In Example 2.5, we create a linear `yScale`, assigning a range from 0 to the height of the chart. Because the `chart` container is drawn from top to bottom, we include the `chartHeight` as the initial variable. We also use a domain that encompasses all of our sample data attribute values from the initially expressed variable, with a little room to spare (lines 2-4). We then apply the `yScale` to each attribute value to set the circle `cy`. We use the `parseFloat()` function to ensure our data are formatted corrected as floating point variables.
 
-We will use a similar approach to set the `cx` variable (example 2.6).
+We will use a similar approach to set the `cx` variable (Example 2.6).
 
 ###### Example 2.6: Setting the circle x-position with a linear scale in _main.js_
 
@@ -563,9 +563,9 @@ Because we are using the same variable for both axes, the resulting chart is a s
             y:attrArray[0], //y attribute
             color:attrArray[1] //color/size attribute
         }
-        ......
+        ...
         function makeColorScale(data) {
-            ......
+            ...
             //build array of all values of the expressed attribute
             var domainArray = [];
             for (var i = 0; i < data.length; i++) {
@@ -573,9 +573,9 @@ Because we are using the same variable for both axes, the resulting chart is a s
                 var val = parseFloat(data[i][expressed.color]);
                 domainArray.push(val);
             };
-        ......
+        ...
         function setEnumerationUnits(midwestStates, map, path, colorScale) {
-            ......
+            ...
             .style("fill", function (d) {
 				//check to make sure a data value exists, if not set color to gray
 				var value = d.properties[expressed.color];            
@@ -585,9 +585,9 @@ Because we are using the same variable for both axes, the resulting chart is a s
 					return "#ccc";            
 				}    
 			});
-        ......
+        ...
         function setChart(csvData, colorScale) {
-            ......
+            ...
             .attr("cx", function (d, i) {
 				return xScale(parseFloat(d[expressed.x]));
 			})
@@ -609,10 +609,10 @@ With the positions set correctly, we also can use the fill color of each circle 
 ###### Example 2.9: Setting the circle color using the existing color in _main.js_
 
     var circles = chart.selectAll(".circles")
-        ......
+        ...
         .attr("fill", function(d){
 				return colorScale(parseFloat(d[expressed.color]));
-			});
+		});
 
 We are also going to use the size of the circle to redunantly encode the same variable we are using for color. In theory, we could use circle size to encode a fourth variable, but we will stick with three to keep things simple.
 
@@ -621,7 +621,7 @@ Currently, the `r` value is set to an arbitrary value (`10`). We will use a simi
 ###### Example 2.10: Setting the circle size in _main.js_
 
     var circles = chart.selectAll(".circles")
-        ......
+        ...
         .attr("r", function (d) {
             var minRadius = 2.5
             //calculate the radius based on expressed value as circle area
@@ -648,7 +648,7 @@ We will start by creating two axes in the `setChart` function (Example 2.10)
 ###### Example 3.1: Adding axes in _main.js_
 
         function setChart(csvData, colorScale) {
-            ......
+            ...
             //create a scale to place circles proportionally
             var yScale = d3.scaleLinear()
                 .range([chartHeight, 0])
@@ -673,7 +673,7 @@ We will start by creating two axes in the `setChart` function (Example 2.10)
                 .attr("transform", "translate(0," + chartHeight + ")")
                 .call(xAxisScale);
 
-Note that for the `xaxis`, we add a `transform` attribute. If we don't, our x-axis will draw just above our chart, and therefore not be visible. To remedy this, we offset the axis by the exact height of the chart. This will move it to the very bottom, which is where we want it!
+Note that for the `xaxis`, we add a `transform` attribute. If we do not, our x-axis will draw just above our chart, and therefore not be visible. To remedy this, we offset the axis by the exact height of the chart. This will move it to the very bottom, which is where we want it!
 
 If we take a look in the browser, we will see that our axes are there, but not perfect (Figure 10.3.1)
 
@@ -724,7 +724,7 @@ Next, we are going to move the `yScale` and `xScale` declarations into their own
 
     //function to create coordinated bubble chart
 	function setChart(csvData, colorScale) {
-		......
+		...
 		//create a scale to place circles proportionally
 		var yScale = createYScale(csvData,chartHeight)
         //create an x scale to place circles proportionally
@@ -757,7 +757,7 @@ Finally, we are going to move our axis generation into its own function, too. Th
     }
 
     function setChart(csvData, colorScale) {
-		......
+		...
 		//create a scale to place circles proportionally
 		var yScale = createYScale(csvData,chartHeight)
         //create an x scale to place circles proportionally
