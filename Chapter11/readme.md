@@ -840,7 +840,7 @@ We now have a label that follows the mouse and switches sides to avoid overflow 
 
 ###### Figure 2.4: Dynamic label
 
-> ### **Implement a dynamic label on your choropleth map and linked visualization.*
+> ### **Implement a dynamic label on your choropleth map and linked visualization.**
 
 Lesson 3: (Optional) Additions
 --------------------------------------
@@ -851,7 +851,7 @@ At this point, your multivariate coordinate visualization is almost done! While 
 
 A design can be considered responsive if it accounts for different screen sizes. While responsive design is not the focus of the workbook, some small additions to our code can make our design more mobile-friendly.
 
-Our chart and map width are both set to be roughly half the width of the browser. But what if a user tries access the visualization from their phone? They'd see a side-by-side view of a very thin chart and a very thin map—both too small to be usable. To address this, we need to check the width of the browser and adjust the sizes of our visualizations accordingly. Once the width of the browser is identified, we can choose to keep the current width of the chart for large browsers. For smaller browsers, we can set the chart and map size to be the full width of the browser, which will stack both visualizations atop one another.
+Our chart and map width are both set to be roughly half the width of the browser. But what if a user tries access the visualization from their phone? They would see a side-by-side view of a very thin chart and a very thin map—both too small to be usable. To address this, we need to check the width of the browser and adjust the sizes of our visualizations accordingly. Once the width of the browser is identified, we can choose to keep the current width of the chart for large browsers. For smaller browsers, we can set the chart and map size to be the full width of the browser, which will stack both visualizations atop one another.
 
 While we are at it, we can also set both the chart and map height to be the full height of the browser, minus the height of the `<navbar>` element (approximately 170px, though feel free to experiement with different values) (Example 3.1).
 
@@ -888,7 +888,7 @@ While we are at it, we can also set both the chart and map height to be the full
 
 ### II. Dropdown Styling
 
-Currently, our dropdown menus all use the names of our CSV headers, and they aren't the most descriptive! While we could change the names of the headers in the CSV file, adding spaces and specific characters might create problems in our code. It would be better to implement a naming convention wherein each table header was linked to a particular, human-readable name. Similarly, it would be good to add units to our _retrieve_ popup, as there are multiple units within our dataset.
+Currently, our dropdown menus all use the names of our CSV headers, and they are not the most descriptive! While we could change the names of the headers in the CSV file, adding spaces and specific characters might create problems in our code. It would be better to implement a naming convention wherein each table header was linked to a particular, human-readable name. Similarly, it would be good to add units to our _retrieve_ popup, as there are multiple units within our dataset.
 
 How can we do all of this at once? Again, the answer lies in object notation (Example 3.2).
 
